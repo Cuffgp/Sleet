@@ -5,6 +5,10 @@
 
 #define SL_BIND_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
+#define SL_DEBUGBREAK() __debugbreak()
+#define SL_EXPAND_MACRO(x) x
+#define SL_STRINGIFY_MACRO(x) #x
+
 #define SL_ENABLE_ASSERTS
 #ifdef SL_ENABLE_ASSERTS
 
