@@ -1,0 +1,13 @@
+
+#include "Sleet/Application.h"
+
+namespace Sleet {
+
+	void Application::run()
+	{
+		while (!window.shouldClose())
+		{
+			glfwPollEvents();
+		}
+	}
+}
