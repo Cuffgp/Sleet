@@ -2,6 +2,7 @@
 
 
 #include "Sleet/Core/Window.h"
+#include "Sleet/Vulkan/VulkanDevice.h"
 #include "Sleet/Vulkan/VulkanPipeline.h"
 
 namespace Sleet {
@@ -17,8 +18,12 @@ namespace Sleet {
 
 	private:
 		Window window{ WIDTH, HEIGHT, "Hello Vulkan" };
-		VulkanPipeline pipeline{ "assets/shaders/simple_shader.vert.spv",
-		"assets/shaders/simple_shader.frag.spv" };
+		VulkanDevice device{ window };
+		VulkanPipeline pipeline{
+		device,
+		"assets/shaders/simple_shader.vert.spv",
+		"assets/shaders/simple_shader.frag.spv",
+		VulkanPipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)};
 	};
 
 }

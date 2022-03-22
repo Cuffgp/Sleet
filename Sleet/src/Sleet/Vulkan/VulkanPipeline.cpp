@@ -7,14 +7,26 @@
 
 namespace Sleet {
 
-	VulkanPipeline::VulkanPipeline(const std::string& vertFilepath, const std::string& fragFilepath)
+	VulkanPipeline::VulkanPipeline(
+		VulkanDevice& device,
+		const std::string& vertFilepath,
+		const std::string& fragFilepath,
+		const PipelineConfigInfo& configInfo):
+		vulkanDevice(device)
 	{
-		createGraphicsPipeline(vertFilepath, fragFilepath);
+		createGraphicsPipeline(vertFilepath, fragFilepath, configInfo);
 	}
 
 	VulkanPipeline::~VulkanPipeline()
 	{
 
+	}
+
+	PipelineConfigInfo VulkanPipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height)
+	{
+		PipelineConfigInfo configInfo{};
+
+		return configInfo;
 	}
 
 	std::vector<char> VulkanPipeline::readFile(const std::string& filepath)
@@ -35,13 +47,29 @@ namespace Sleet {
 		return buffer;
 	}
 
-	void VulkanPipeline::createGraphicsPipeline(const std::string& vertFilepath, const std::string& fragFilepath)
+	void VulkanPipeline::createGraphicsPipeline(
+		const std::string& vertFilepath,
+		const std::string& fragFilepath,
+		const PipelineConfigInfo& configInfo)
 	{
 		auto vertCode = readFile(vertFilepath);
 		auto fragCode = readFile(fragFilepath);
 
 		std::cout << "Vertex Shader file size: " << vertCode.size() << std::endl;
 		std::cout << "Fragment Shader file size: " << fragCode.size() << std::endl;
+	}
+
+	void VulkanPipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule)
+	{
+		VkShaderModuleCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+		createInfo.codeSize = code.size();
+		createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+
+		if (vkCreateShaderModule(vulkanDevice.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS)
+		{
+			throw std::runtime_error("Failed to create shader module.");
+		}
 	}
 
 }
