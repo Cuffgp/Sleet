@@ -1,5 +1,5 @@
 
-#include "Sleet/Window.h"
+#include "Sleet/Core/Window.h"
 
 namespace Sleet {
 
