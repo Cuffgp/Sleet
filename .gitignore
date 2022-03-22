@@ -1,0 +1,19 @@
+# Binaries
+bin/
+bin-int/
+
+# Files
+*.user
+*.log
+*.ini
+
+# Visual Studios
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+
+#Cinder/vendor/VulkanSDK
+
+premake5.exe
