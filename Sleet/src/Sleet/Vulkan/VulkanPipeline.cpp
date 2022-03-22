@@ -1,6 +1,6 @@
+#include "slpch.h"
 
 #include <fstream>
-#include <stdexcept>
 #include <iostream>
 
 #include "Sleet/Vulkan/VulkanPipeline.h"

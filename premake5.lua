@@ -42,8 +42,8 @@ project "Sleet"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 	
-	--pchheader "slpch.h"
-	--pchsource "Sleet/src/slpch.cpp"
+	pchheader "slpch.h"
+	pchsource "Sleet/src/slpch.cpp"
 
 	files 
 	{ 

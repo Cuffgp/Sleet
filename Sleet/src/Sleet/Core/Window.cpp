@@ -1,4 +1,4 @@
-
+#include "slpch.h"
 #include <stdexcept>
 
 #include "Sleet/Core/Window.h"

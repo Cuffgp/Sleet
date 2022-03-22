@@ -1,4 +1,4 @@
-
+#include "slpch.h"
 #include "Sleet/Core/Application.h"
 
 #include <cstdlib>
@@ -8,6 +8,7 @@
 
 int main()
 {
+	Sleet::Log::Init();
 	Sleet::Application app{};
 
 	try 
@@ -17,7 +18,7 @@ int main()
 
 	catch(const std::exception &e)
 	{
-		std::cerr << e.what() << "\n";
+		SL_ERROR(e.what());
 		return EXIT_FAILURE;
 	}
 
