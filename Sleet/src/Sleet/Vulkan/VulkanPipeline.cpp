@@ -24,6 +24,11 @@ namespace Sleet {
 		vkDestroyPipeline(vulkanDevice.device(), graphicsPipeline, nullptr);
 	}
 
+	void VulkanPipeline::bind(VkCommandBuffer commandBuffer)
+	{
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+	}
+
 	void VulkanPipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo, uint32_t width, uint32_t height)
 	{
 
