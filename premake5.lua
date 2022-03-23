@@ -19,11 +19,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "Sleet/vendor/glfw/include"
 --IncludeDir["ImGui"] = "Sleet/vendor/imgui"
-IncludeDir["Vulkan"] = "C:/VulkanSDK/1.3.204.0/Include"
+IncludeDir["Vulkan"] = "C:/VulkanSDK/1.3.204.1/Include"
 IncludeDir["glm"] = "Sleet/vendor/glm"
 
 LibraryDir = {}
-LibraryDir["VulkanSDK"] = "C:/VulkanSDK/1.3.204.0/Lib"
+LibraryDir["VulkanSDK"] = "C:/VulkanSDK/1.3.204.1/Lib"
 
 Library = {}
 Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"

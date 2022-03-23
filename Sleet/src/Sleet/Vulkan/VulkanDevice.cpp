@@ -1,12 +1,6 @@
 #include "slpch.h"
 #include "Sleet/Vulkan/VulkanDevice.h"
 
-// std headers
-#include <cstring>
-#include <iostream>
-#include <set>
-#include <unordered_set>
-
 namespace Sleet {
 
 	// local callback functions
@@ -16,7 +10,7 @@ namespace Sleet {
 		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 		void* pUserData) 
 	{
-		std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+		SL_ERROR("Validation layer: {}", pCallbackData->pMessage);
 
 		return VK_FALSE;
 	}
@@ -83,7 +77,7 @@ namespace Sleet {
 	{
 		if (enableValidationLayers && !checkValidationLayerSupport()) 
 		{
-			throw std::runtime_error("validation layers requested, but not available!");
+			SL_ERROR("Validation layers requested, but not available!");
 		}
 
 		VkApplicationInfo appInfo = {};
@@ -119,7 +113,7 @@ namespace Sleet {
 
 		if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) 
 		{
-			throw std::runtime_error("failed to create instance!");
+			SL_ERROR("Failed to create instance!");
 		}
 
 		hasGflwRequiredInstanceExtensions();
@@ -131,9 +125,9 @@ namespace Sleet {
 		vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 		if (deviceCount == 0) 
 		{
-			throw std::runtime_error("failed to find GPUs with Vulkan support!");
+			SL_ERROR("Failed to find GPUs with Vulkan support!");
 		}
-		std::cout << "Device count: " << deviceCount << std::endl;
+		SL_INFO("Device count: {}", deviceCount);
 		std::vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
@@ -148,11 +142,11 @@ namespace Sleet {
 
 		if (physicalDevice == VK_NULL_HANDLE) 
 		{
-			throw std::runtime_error("failed to find a suitable GPU!");
+			SL_ERROR("Failed to find a suitable GPU!");
 		}
 
 		vkGetPhysicalDeviceProperties(physicalDevice, &properties);
-		std::cout << "physical device: " << properties.deviceName << std::endl;
+		SL_INFO("Physical device: {}", properties.deviceName);
 	}
 
 	void VulkanDevice::createLogicalDevice() 
@@ -200,7 +194,7 @@ namespace Sleet {
 
 		if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device_) != VK_SUCCESS) 
 		{
-			throw std::runtime_error("failed to create logical device!");
+			SL_ERROR("Failed to create logical device!");
 		}
 
 		vkGetDeviceQueue(device_, indices.graphicsFamily, 0, &graphicsQueue_);
@@ -219,7 +213,7 @@ namespace Sleet {
 
 		if (vkCreateCommandPool(device_, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) 
 		{
-			throw std::runtime_error("failed to create command pool!");
+			SL_ERROR("Failed to create command pool!");
 		}
 	}
 
@@ -266,7 +260,7 @@ namespace Sleet {
 		populateDebugMessengerCreateInfo(createInfo);
 		if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) 
 		{
-			throw std::runtime_error("failed to set up debug messenger!");
+			SL_ERROR("Failed to set up debug messenger!");
 		}
 	}
 
@@ -323,22 +317,22 @@ namespace Sleet {
 		std::vector<VkExtensionProperties> extensions(extensionCount);
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
-		std::cout << "available extensions:" << std::endl;
+		SL_INFO("Available extensions:");
 		std::unordered_set<std::string> available;
 		for (const auto& extension : extensions) 
 		{
-			std::cout << "\t" << extension.extensionName << std::endl;
+			SL_INFO("\t {}", extension.extensionName);
 			available.insert(extension.extensionName);
 		}
 
-		std::cout << "required extensions:" << std::endl;
+		SL_INFO("Required extensions:");
 		auto requiredExtensions = getRequiredExtensions();
 		for (const auto& required : requiredExtensions) 
 		{
-			std::cout << "\t" << required << std::endl;
+			SL_INFO("\t {}", required);
 			if (available.find(required) == available.end()) 
 			{
-				throw std::runtime_error("Missing required glfw extension");
+				SL_ERROR("Missing required glfw extension");
 			}
 		}
 	}
@@ -448,7 +442,7 @@ namespace Sleet {
 				return format;
 			}
 		}
-		throw std::runtime_error("failed to find supported format!");
+		SL_ERROR("Failed to find supported format!");
 	}
 
 	uint32_t VulkanDevice::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) 
@@ -464,7 +458,7 @@ namespace Sleet {
 			}
 		}
 
-		throw std::runtime_error("failed to find suitable memory type!");
+		SL_ERROR("Failed to find suitable memory type!");
 	}
 
 	void VulkanDevice::createBuffer(
@@ -482,7 +476,7 @@ namespace Sleet {
 
 		if (vkCreateBuffer(device_, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) 
 		{
-			throw std::runtime_error("failed to create vertex buffer!");
+			SL_ERROR("Failed to create vertex buffer!");
 		}
 
 		VkMemoryRequirements memRequirements;
@@ -495,7 +489,7 @@ namespace Sleet {
 
 		if (vkAllocateMemory(device_, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) 
 		{
-			throw std::runtime_error("failed to allocate vertex buffer memory!");
+			SL_ERROR("Failed to allocate vertex buffer memory!");
 		}
 
 		vkBindBufferMemory(device_, buffer, bufferMemory, 0);
@@ -584,7 +578,7 @@ namespace Sleet {
 	{
 		if (vkCreateImage(device_, &imageInfo, nullptr, &image) != VK_SUCCESS) 
 		{
-			throw std::runtime_error("failed to create image!");
+			SL_ERROR("Failed to create image!");
 		}
 
 		VkMemoryRequirements memRequirements;
@@ -597,12 +591,12 @@ namespace Sleet {
 
 		if (vkAllocateMemory(device_, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) 
 		{
-			throw std::runtime_error("failed to allocate image memory!");
+			SL_ERROR("Failed to allocate image memory!");
 		}
 
 		if (vkBindImageMemory(device_, image, imageMemory, 0) != VK_SUCCESS) 
 		{
-			throw std::runtime_error("failed to bind image memory!");
+			SL_ERROR("Failed to bind image memory!");
 		}
 	}
 

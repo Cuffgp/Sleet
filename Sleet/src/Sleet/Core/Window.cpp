@@ -5,6 +5,12 @@
 
 namespace Sleet {
 
+	void glfwErrorCallback(int error, const char* description)
+	{
+		SL_ERROR("GLFW Error {}: {}", error, description);
+	}
+
+
 	Window::Window(int w, int h, std::string name) :
 		width(w), height(h), windowName(name)
 	{
@@ -19,7 +25,9 @@ namespace Sleet {
 
 	void Window::initWindow()
 	{
-		glfwInit();
+		SL_ASSERT(glfwInit());
+
+		glfwSetErrorCallback(glfwErrorCallback);
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
@@ -30,7 +38,7 @@ namespace Sleet {
 	{
 		if (glfwCreateWindowSurface(instance, window, nullptr, surface) != VK_SUCCESS)
 		{
-			throw std::runtime_error("Failed to create window surface.");
+			SL_ERROR("Failed to create window surface.");
 		}
 	}
 

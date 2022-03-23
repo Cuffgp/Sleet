@@ -35,7 +35,7 @@ namespace Sleet {
 
 		if (!file.is_open())
 		{
-			throw std::runtime_error("Failed to open file: " + filepath);
+			SL_ERROR("Failed to open file: {}", filepath);
 		}
 
 		size_t fileSize = static_cast<size_t>(file.tellg());
@@ -55,8 +55,8 @@ namespace Sleet {
 		auto vertCode = readFile(vertFilepath);
 		auto fragCode = readFile(fragFilepath);
 
-		std::cout << "Vertex Shader file size: " << vertCode.size() << std::endl;
-		std::cout << "Fragment Shader file size: " << fragCode.size() << std::endl;
+		SL_INFO("Vertex Shader file size: {}", vertCode.size());
+		SL_INFO("Fragment Shader file size: {}", fragCode.size());
 	}
 
 	void VulkanPipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule)
@@ -68,7 +68,7 @@ namespace Sleet {
 
 		if (vkCreateShaderModule(vulkanDevice.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS)
 		{
-			throw std::runtime_error("Failed to create shader module.");
+			SL_ERROR("Failed to create shader module.");
 		}
 	}
 
