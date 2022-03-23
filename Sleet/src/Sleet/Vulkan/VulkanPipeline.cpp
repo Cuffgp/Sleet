@@ -24,9 +24,8 @@ namespace Sleet {
 		vkDestroyPipeline(vulkanDevice.device(), graphicsPipeline, nullptr);
 	}
 
-	PipelineConfigInfo VulkanPipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height)
+	void VulkanPipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo, uint32_t width, uint32_t height)
 	{
-		PipelineConfigInfo configInfo{};
 
 		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
@@ -94,7 +93,6 @@ namespace Sleet {
 		configInfo.depthStencilInfo.front = {};  // Optional
 		configInfo.depthStencilInfo.back = {};   // Optional
 
-		return configInfo;
 	}
 
 	std::vector<char> VulkanPipeline::readFile(const std::string& filepath)
