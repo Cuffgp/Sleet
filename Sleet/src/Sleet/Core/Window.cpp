@@ -29,9 +29,11 @@ namespace Sleet {
 
 		glfwSetErrorCallback(glfwErrorCallback);
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
 		window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
+		glfwSetWindowUserPointer(window, this);
+		glfwSetFramebufferSizeCallback(window, framebufferResizedCallback);
 	}
 
 	void Window::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface)
@@ -40,6 +42,14 @@ namespace Sleet {
 		{
 			SL_ERROR("Failed to create window surface.");
 		}
+	}
+
+	void Window::framebufferResizedCallback(GLFWwindow* window, int width, int height)
+	{
+		auto sleetWindow = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+		sleetWindow->framebufferResized = true;
+		sleetWindow->width = width;
+		sleetWindow->height = height;
 	}
 
 }

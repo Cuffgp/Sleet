@@ -29,12 +29,14 @@ namespace Sleet {
 		void createPipelineLayout();
 		void createPipeline();
 		void createCommandBuffers();
+		void freeCommandBuffers();
 		void drawFrame();
+		void recreateSwapchain();
+		void recordCommandBuffer(int imageIndex);
 
 		Window window{ WIDTH, HEIGHT, "Hello Vulkan" };
 		VulkanDevice device{ window };
-		VulkanSwapchain swapchain{ device, window.getExtent() };
-
+		Scope<VulkanSwapchain> swapchain;
 		Scope<VulkanPipeline> pipeline;
 		VkPipelineLayout pipelineLayout;
 		std::vector<VkCommandBuffer> commandBuffers;

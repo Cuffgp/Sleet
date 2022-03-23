@@ -8,12 +8,15 @@ namespace Sleet {
 	VulkanSwapchain::VulkanSwapchain(VulkanDevice& deviceRef, VkExtent2D extent)
 		: device{ deviceRef }, windowExtent{ extent } 
 	{
-		createSwapChain();
-		createImageViews();
-		createRenderPass();
-		createDepthResources();
-		createFramebuffers();
-		createSyncObjects();
+		init();
+	}
+
+	VulkanSwapchain::VulkanSwapchain(VulkanDevice& deviceRef, VkExtent2D extent, Ref<VulkanSwapchain> previous)
+		: device{ deviceRef }, windowExtent{ extent }, oldSwapchain {previous}
+	{
+		init();
+
+		oldSwapchain = nullptr;
 	}
 
 	VulkanSwapchain::~VulkanSwapchain() 
@@ -124,6 +127,16 @@ namespace Sleet {
 		return result;
 	}
 
+	void VulkanSwapchain::init()
+	{
+		createSwapChain();
+		createImageViews();
+		createRenderPass();
+		createDepthResources();
+		createFramebuffers();
+		createSyncObjects();
+	}
+
 	void VulkanSwapchain::createSwapChain() 
 	{
 		SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
@@ -172,7 +185,7 @@ namespace Sleet {
 		createInfo.presentMode = presentMode;
 		createInfo.clipped = VK_TRUE;
 
-		createInfo.oldSwapchain = VK_NULL_HANDLE;
+		createInfo.oldSwapchain = oldSwapchain == nullptr ? VK_NULL_HANDLE : oldSwapchain->swapChain;
 
 		if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) 
 		{

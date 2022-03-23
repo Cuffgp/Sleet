@@ -17,10 +17,11 @@ namespace Sleet {
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
 		VulkanSwapchain(VulkanDevice& deviceRef, VkExtent2D windowExtent);
+		VulkanSwapchain(VulkanDevice& deviceRef, VkExtent2D windowExtent, Ref<VulkanSwapchain> previous);
 		~VulkanSwapchain();
 
 		VulkanSwapchain(const VulkanSwapchain&) = delete;
-		void operator=(const VulkanSwapchain&) = delete;
+		VulkanSwapchain& operator=(const VulkanSwapchain&) = delete;
 
 		VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
 		VkRenderPass getRenderPass() { return renderPass; }
@@ -40,6 +41,7 @@ namespace Sleet {
 		VkResult submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
 	private:
+		void init();
 		void createSwapChain();
 		void createImageViews();
 		void createDepthResources();
@@ -70,6 +72,7 @@ namespace Sleet {
 		VkExtent2D windowExtent;
 
 		VkSwapchainKHR swapChain;
+		Ref<VulkanSwapchain> oldSwapchain;
 
 		std::vector<VkSemaphore> imageAvailableSemaphores;
 		std::vector<VkSemaphore> renderFinishedSemaphores;
