@@ -8,13 +8,15 @@
 
 namespace Sleet {
 
-	struct SwapChainSupportDetails {
+	struct SwapChainSupportDetails 
+	{
 		VkSurfaceCapabilitiesKHR capabilities;
 		std::vector<VkSurfaceFormatKHR> formats;
 		std::vector<VkPresentModeKHR> presentModes;
 	};
 
-	struct QueueFamilyIndices {
+	struct QueueFamilyIndices 
+	{
 		uint32_t graphicsFamily;
 		uint32_t presentFamily;
 		bool graphicsFamilyHasValue = false;
