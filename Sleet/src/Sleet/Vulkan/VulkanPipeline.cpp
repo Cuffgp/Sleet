@@ -120,6 +120,9 @@ namespace Sleet {
 		const std::string& fragFilepath,
 		const PipelineConfigInfo& configInfo)
 	{
+		SL_ASSERT(configInfo.pipelineLayout != VK_NULL_HANDLE, "Cannot create graphics pipeline:: no pipelineLayout provided in config info");
+		SL_ASSERT(configInfo.renderPass != VK_NULL_HANDLE, "Cannot create graphics pipeline:: no pipelineLayout provided in config info");
+
 		auto vertCode = readFile(vertFilepath);
 		auto fragCode = readFile(fragFilepath);
 
