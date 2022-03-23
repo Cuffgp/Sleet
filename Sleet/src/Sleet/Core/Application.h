@@ -5,6 +5,7 @@
 #include "Sleet/Vulkan/VulkanDevice.h"
 #include "Sleet/Vulkan/VulkanPipeline.h"
 #include "Sleet/Vulkan/VulkanSwapchain.h"
+#include "Sleet/Vulkan/VulkanModel.h"
 
 namespace Sleet {
 
@@ -24,6 +25,7 @@ namespace Sleet {
 		void run();
 
 	private:
+		void loadModels();
 		void createPipelineLayout();
 		void createPipeline();
 		void createCommandBuffers();
@@ -32,10 +34,12 @@ namespace Sleet {
 		Window window{ WIDTH, HEIGHT, "Hello Vulkan" };
 		VulkanDevice device{ window };
 		VulkanSwapchain swapchain{ device, window.getExtent() };
-		Scope<VulkanPipeline> pipeline;
 
+		Scope<VulkanPipeline> pipeline;
 		VkPipelineLayout pipelineLayout;
 		std::vector<VkCommandBuffer> commandBuffers;
+
+		Scope<VulkanModel> model;
 	};
 
 }

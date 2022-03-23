@@ -6,6 +6,7 @@ namespace Sleet {
 
 	Application::Application()
 	{
+		loadModels();
 		createPipelineLayout();
 		createPipeline();
 		createCommandBuffers();
@@ -25,6 +26,12 @@ namespace Sleet {
 		}
 
 		vkDeviceWaitIdle(device.device());
+	}
+
+	void Application::loadModels()
+	{
+		std::vector<VulkanModel::Vertex> vertices{ {{0.0f, -0.5f}}, {{0.5f, 0.5f}}, {{-0.5f, 0.5f}} };
+		model = CreateScope<VulkanModel>(device, vertices);
 	}
 
 	void Application::createPipelineLayout()
@@ -100,7 +107,8 @@ namespace Sleet {
 			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 			pipeline->bind(commandBuffers[i]);
-			vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+			model->bind(commandBuffers[i]);
+			model->draw(commandBuffers[i]);
 
 			vkCmdEndRenderPass(commandBuffers[i]);
 			if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) 
