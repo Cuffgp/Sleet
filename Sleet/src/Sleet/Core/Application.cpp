@@ -1,8 +1,17 @@
 #include "slpch.h"
-
 #include "Sleet/Core/Application.h"
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+
 namespace Sleet {
+
+	struct SimplePushConstantData
+	{
+		glm::vec2 offset;
+		alignas(16) glm::vec3 color;
+	};
 
 	Application::Application()
 	{
@@ -40,12 +49,17 @@ namespace Sleet {
 
 	void Application::createPipelineLayout()
 	{
+		VkPushConstantRange pushConstantRange{};
+		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(SimplePushConstantData);
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutInfo.setLayoutCount = 0;
 		pipelineLayoutInfo.pSetLayouts = nullptr;
-		pipelineLayoutInfo.pushConstantRangeCount = 0;
-		pipelineLayoutInfo.pPushConstantRanges = nullptr;
+		pipelineLayoutInfo.pushConstantRangeCount = 1;
+		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 		if (vkCreatePipelineLayout(device.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
 			VK_SUCCESS) 
 		{
@@ -159,7 +173,23 @@ namespace Sleet {
 
 		pipeline->bind(commandBuffers[imageIndex]);
 		model->bind(commandBuffers[imageIndex]);
-		model->draw(commandBuffers[imageIndex]);
+
+		for (int j = 0; j < 4; j++)
+		{
+			SimplePushConstantData push{};
+			push.offset = { 0.0f, -0.4f + j * 0.2f };
+			push.color = { 0.0f, 0.0f, 0.2f + 0.2f * j };
+
+			vkCmdPushConstants(
+				commandBuffers[imageIndex],
+				pipelineLayout,
+				VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+				0,
+				sizeof(SimplePushConstantData),
+				&push);
+
+			model->draw(commandBuffers[imageIndex]);
+		}
 
 		vkCmdEndRenderPass(commandBuffers[imageIndex]);
 		if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS)
