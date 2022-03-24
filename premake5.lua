@@ -70,6 +70,8 @@ project "Sleet"
 		"%{Library.Vulkan}"
 	}
 
+	prebuildcommands { "cd assets/shaders/", "./compile.bat" }
+
 	filter "configurations:Debug"
 		defines { "DEBUG" }
 		runtime "Debug"

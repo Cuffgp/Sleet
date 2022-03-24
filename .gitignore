@@ -6,6 +6,7 @@ bin-int/
 *.user
 *.log
 *.ini
+*.spv
 
 # Visual Studios
 .vs/
@@ -13,7 +14,5 @@ bin-int/
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
-
-#Cinder/vendor/VulkanSDK
 
 premake5.exe
