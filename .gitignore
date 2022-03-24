@@ -6,7 +6,7 @@ bin-int/
 *.user
 *.log
 *.ini
-*.spv
+**.spv
 
 # Visual Studios
 .vs/
