@@ -5,6 +5,7 @@
 #include "Sleet/Vulkan/VulkanPipeline.h"
 #include "Sleet/Vulkan/VulkanRenderer.h"
 #include "Sleet/Core/GameObject.h"
+#include "Sleet/Core/Camera.h"
 
 namespace Sleet {
 

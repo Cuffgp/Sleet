@@ -22,15 +22,20 @@ namespace Sleet {
 	void Application::run()
 	{
 		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapchainRenderPass() };
+		Camera camera{};
 
 		while (!window.shouldClose())
 		{
 			glfwPollEvents();
+
+			float aspect = renderer.getAspectRatio();
+			//camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+			camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
 			
 			if (auto commandBuffer = renderer.beginFrame())
 			{
 				renderer.beginSwapchainRenderPass(commandBuffer);
-				simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects);
+				simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
 				renderer.endSwapchainRenderPass(commandBuffer);
 				renderer.endFrame();
 			}
@@ -103,7 +108,7 @@ namespace Sleet {
 
 		auto cube = GameObject::createGameObject();
 		cube.model = model;
-		cube.transform.translation = { 0.f, 0.f, 0.5f };
+		cube.transform.translation = { 0.f, 0.f, 2.5f };
 		cube.transform.scale = { 0.5f, 0.5f, 0.5f };
 
 		gameObjects.push_back(std::move(cube));

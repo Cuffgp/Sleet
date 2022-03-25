@@ -18,6 +18,7 @@ namespace Sleet {
 		VulkanRenderer& operator=(const VulkanRenderer&) = delete;
 
 		VkRenderPass getSwapchainRenderPass() const { return swapchain->getRenderPass(); }
+		float getAspectRatio() const { return swapchain->extentAspectRatio(); }
 		bool isFrameInProgress() const { return isFrameStarted; }
 		VkCommandBuffer getCurrentCommandBuffer() 
 		{
