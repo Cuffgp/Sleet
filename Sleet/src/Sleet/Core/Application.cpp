@@ -31,6 +31,7 @@ namespace Sleet {
 			float aspect = renderer.getAspectRatio();
 			//camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
 			camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
+			camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
 			
 			if (auto commandBuffer = renderer.beginFrame())
 			{
