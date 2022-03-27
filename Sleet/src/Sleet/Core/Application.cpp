@@ -1,11 +1,14 @@
 #include "slpch.h"
 #include "Sleet/Core/Application.h"
+#include "Sleet/Core/KeyboardMovementController.h"
 #include "Sleet/Systems/SimpleRenderSystem.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
+
+#include <chrono>
 
 namespace Sleet {
 
@@ -24,14 +27,24 @@ namespace Sleet {
 		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapchainRenderPass() };
 		Camera camera{};
 
+		auto viewerObject = GameObject::createGameObject();
+		KeyboardMovementController cameraController{};
+
+		auto currentTime = std::chrono::high_resolution_clock::now();
+
 		while (!window.shouldClose())
 		{
 			glfwPollEvents();
 
+			auto newTime = std::chrono::high_resolution_clock::now();
+			float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+			currentTime = newTime;
+
+			cameraController.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject);
+			camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
+
 			float aspect = renderer.getAspectRatio();
-			//camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
 			camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
-			camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
 			
 			if (auto commandBuffer = renderer.beginFrame())
 			{
