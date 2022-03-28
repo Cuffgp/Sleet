@@ -1,6 +1,26 @@
 #include "slpch.h"
 
 #include "Sleet/Vulkan/VulkanModel.h"
+#include "Sleet/Core/Utilities.h"
+
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "tiny_obj_loader/tiny_obj_loader.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
+
+namespace std {
+
+	template <>
+	struct hash<Sleet::VulkanModel::Vertex> 
+	{
+		size_t operator()(Sleet::VulkanModel::Vertex const& vertex) const 
+		{
+			size_t seed = 0;
+			Sleet::Utils::hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
+			return seed;
+		}
+	};
+}
 
 namespace Sleet {
 
@@ -20,6 +40,15 @@ namespace Sleet {
 			vkDestroyBuffer(lveDevice.device(), indexBuffer, nullptr);
 			vkFreeMemory(lveDevice.device(), indexBufferMemory, nullptr);
 		}
+	}
+
+	Scope<VulkanModel> VulkanModel::createModelFromFile(VulkanDevice& device, const std::string& filepath)
+	{
+		Builder builder{};
+		builder.loadModel(filepath);
+		SL_INFO("Vertex count: {}", builder.vertices.size());
+
+		return CreateScope<VulkanModel>(device, builder);
 	}
 
 	void VulkanModel::createVertexBuffers(const std::vector<Vertex>& vertices)
@@ -142,6 +171,79 @@ namespace Sleet {
 		attributeDescriptions[1].offset = offsetof(Vertex, color);
 
 		return attributeDescriptions;
+	}
+
+	void VulkanModel::Builder::loadModel(const std::string& filepath)
+	{
+		tinyobj::attrib_t attrib;
+		std::vector<tinyobj::shape_t> shapes;
+		std::vector<tinyobj::material_t> materials;
+		std::string warn, err;
+
+		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filepath.c_str())) 
+		{
+			SL_ERROR(warn + err);
+		}
+
+		vertices.clear();
+		indices.clear();
+
+		std::unordered_map<Vertex, uint32_t> uniqueVertices{};
+
+		for (const auto &shape : shapes)
+		{
+			for (const auto& index : shape.mesh.indices)
+			{
+				Vertex vertex{};
+
+				if (index.vertex_index >= 0)
+				{
+					vertex.position = {
+						attrib.vertices[3 * index.vertex_index + 0],
+						attrib.vertices[3 * index.vertex_index + 1],
+						attrib.vertices[3 * index.vertex_index + 2],
+					};
+
+					auto colorIndex = 3 * index.vertex_index + 2;
+					if (colorIndex < attrib.colors.size()) 
+					{
+						vertex.color = {
+							attrib.colors[colorIndex - 2],
+							attrib.colors[colorIndex - 1],
+							attrib.colors[colorIndex - 0],
+						};
+					}
+					else 
+					{
+						vertex.color = { 1.f, 1.f, 1.f };  // set default color
+					}
+				}
+
+				if (index.normal_index >= 0)
+				{
+					vertex.normal = {
+						attrib.normals[3 * index.normal_index + 0],
+						attrib.normals[3 * index.normal_index + 2],
+						attrib.normals[3 * index.normal_index + 1],
+					};
+				}
+
+				if (index.texcoord_index >= 0)
+				{
+					vertex.uv = {
+						attrib.texcoords[2 * index.texcoord_index + 0],
+						attrib.texcoords[2 * index.texcoord_index + 1],
+					};
+				}
+
+				if (uniqueVertices.count(vertex) == 0) 
+				{
+					uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+					vertices.push_back(vertex);
+				}
+				indices.push_back(uniqueVertices[vertex]);
+			}
+		}
 	}
 
 }

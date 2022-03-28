@@ -15,15 +15,25 @@ namespace Sleet {
 		{
 			glm::vec3 position;
 			glm::vec3 color;
+			glm::vec3 normal;
+			glm::vec2 uv;
 
 			static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
 			static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
+
+			bool operator==(const Vertex& other) const
+			{
+				return position == other.position && color == other.color &&
+					normal == other.normal && uv == other.uv;
+			}
 		};
 
 		struct Builder
 		{
 			std::vector<Vertex> vertices;
 			std::vector<uint32_t> indices;
+
+			void loadModel(const std::string &filepath);
 		};
 
 		VulkanModel(VulkanDevice& device, const VulkanModel::Builder &builder);
@@ -31,6 +41,8 @@ namespace Sleet {
 
 		VulkanModel(const VulkanModel&) = delete;
 		VulkanModel& operator=(const VulkanModel&) = delete;
+
+		static Scope<VulkanModel> createModelFromFile(VulkanDevice &device, const std::string &filepath);
 
 		void bind(VkCommandBuffer commandBuffer);
 		void draw(VkCommandBuffer commandBuffer);
