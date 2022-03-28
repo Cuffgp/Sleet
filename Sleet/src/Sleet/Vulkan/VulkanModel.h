@@ -11,7 +11,8 @@ namespace Sleet {
 	class VulkanModel 
 	{
 	public:
-		struct Vertex {
+		struct Vertex 
+		{
 			glm::vec3 position;
 			glm::vec3 color;
 
@@ -19,7 +20,13 @@ namespace Sleet {
 			static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
 		};
 
-		VulkanModel(VulkanDevice& device, const std::vector<Vertex>& vertices);
+		struct Builder
+		{
+			std::vector<Vertex> vertices;
+			std::vector<uint32_t> indices;
+		};
+
+		VulkanModel(VulkanDevice& device, const VulkanModel::Builder &builder);
 		~VulkanModel();
 
 		VulkanModel(const VulkanModel&) = delete;
@@ -29,12 +36,19 @@ namespace Sleet {
 		void draw(VkCommandBuffer commandBuffer);
 
 	private:
-		void createVertexBuffers(const std::vector<Vertex>& vertices);
+		void createVertexBuffers(const std::vector<Vertex> &vertices);
+		void createIndexBuffers(const std::vector<uint32_t> &indices);
 
 		VulkanDevice& lveDevice;
+
 		VkBuffer vertexBuffer;
 		VkDeviceMemory vertexBufferMemory;
 		uint32_t vertexCount;
+
+		bool hasIndexBuffer = false;
+		VkBuffer indexBuffer;
+		VkDeviceMemory indexBufferMemory;
+		uint32_t indexCount;
 	};
 
 
