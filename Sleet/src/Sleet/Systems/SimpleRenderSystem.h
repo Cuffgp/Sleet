@@ -2,6 +2,7 @@
 
 #include "Sleet/Vulkan/VulkanDevice.h"
 #include "Sleet/Vulkan/VulkanPipeline.h"
+#include "Sleet/Vulkan/FrameInfo.h"
 #include "Sleet/Core/GameObject.h"
 #include "Sleet/Core/Camera.h"
 
@@ -16,7 +17,7 @@ namespace Sleet {
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-		void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject> &gameObjects, const Camera &camera);
+		void renderGameObjects(FrameInfo &frameInfo, std::vector<GameObject> &gameObjects);
 
 	private:
 		void createPipelineLayout();

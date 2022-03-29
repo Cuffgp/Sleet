@@ -2,6 +2,7 @@
 #include "Sleet/Core/Application.h"
 #include "Sleet/Core/KeyboardMovementController.h"
 #include "Sleet/Systems/SimpleRenderSystem.h"
+#include "Sleet/Vulkan/VulkanBuffer.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -11,6 +12,12 @@
 #include <chrono>
 
 namespace Sleet {
+
+	struct GlobalUbo
+	{
+		glm::mat4 projectionView{ 1.f };
+		glm::vec3 lightDirection = glm::normalize(glm::vec3{ 1.f, -3.f, -1.f });
+	};
 
 	Application::Application()
 	{
@@ -24,6 +31,20 @@ namespace Sleet {
 
 	void Application::run()
 	{
+		std::vector<Scope<VulkanBuffer>> uboBuffers{ VulkanSwapchain::MAX_FRAMES_IN_FLIGHT };
+
+		for (int i = 0; i < uboBuffers.size(); i++)
+		{
+			uboBuffers[i] = CreateScope<VulkanBuffer>(
+				device,
+				sizeof(GlobalUbo),
+				1,
+				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+				device.properties.limits.minUniformBufferOffsetAlignment);
+			uboBuffers[i]->map();
+		}
+
 		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapchainRenderPass() };
 		Camera camera{};
 
@@ -48,8 +69,23 @@ namespace Sleet {
 			
 			if (auto commandBuffer = renderer.beginFrame())
 			{
+				int frameIndex = renderer.getFrameIndex();
+				FrameInfo frameInfo{
+					frameIndex,
+					frameTime,
+					commandBuffer,
+					camera
+				};
+
+				// Update
+				GlobalUbo ubo{};
+				ubo.projectionView = camera.getProjection() * camera.getView();
+				uboBuffers[frameIndex]->writeToBuffer(&ubo);
+				uboBuffers[frameIndex]->flush();
+
+				// Render
 				renderer.beginSwapchainRenderPass(commandBuffer);
-				simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
+				simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
 				renderer.endSwapchainRenderPass(commandBuffer);
 				renderer.endFrame();
 			}

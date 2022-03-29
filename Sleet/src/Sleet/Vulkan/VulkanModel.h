@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Sleet/Vulkan/VulkanDevice.h"
+#include "Sleet/Vulkan/VulkanBuffer.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -51,15 +52,13 @@ namespace Sleet {
 		void createVertexBuffers(const std::vector<Vertex> &vertices);
 		void createIndexBuffers(const std::vector<uint32_t> &indices);
 
-		VulkanDevice& lveDevice;
+		VulkanDevice& device;
 
-		VkBuffer vertexBuffer;
-		VkDeviceMemory vertexBufferMemory;
+		Scope<VulkanBuffer> vertexBuffer;
 		uint32_t vertexCount;
 
 		bool hasIndexBuffer = false;
-		VkBuffer indexBuffer;
-		VkDeviceMemory indexBufferMemory;
+		Scope<VulkanBuffer> indexBuffer;
 		uint32_t indexCount;
 	};
 
