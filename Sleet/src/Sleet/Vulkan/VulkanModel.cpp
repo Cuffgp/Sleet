@@ -158,17 +158,12 @@ namespace Sleet {
 
 	std::vector<VkVertexInputAttributeDescription> VulkanModel::Vertex::getAttributeDescriptions()
 	{
-		std::vector<VkVertexInputAttributeDescription> attributeDescriptions(2);
+		std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
 
-		attributeDescriptions[0].binding = 0;
-		attributeDescriptions[0].location = 0;
-		attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-		attributeDescriptions[0].offset = offsetof(Vertex, position);;
-
-		attributeDescriptions[1].binding = 0;
-		attributeDescriptions[1].location = 1;
-		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-		attributeDescriptions[1].offset = offsetof(Vertex, color);
+		attributeDescriptions.push_back({ 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position) });
+		attributeDescriptions.push_back({ 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) });
+		attributeDescriptions.push_back({ 2, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal) });
+		attributeDescriptions.push_back({ 3, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, uv) });
 
 		return attributeDescriptions;
 	}
@@ -204,44 +199,37 @@ namespace Sleet {
 						attrib.vertices[3 * index.vertex_index + 2],
 					};
 
-					auto colorIndex = 3 * index.vertex_index + 2;
-					if (colorIndex < attrib.colors.size()) 
+					vertex.color = {
+						attrib.colors[3 * index.vertex_index + 0],
+						attrib.colors[3 * index.vertex_index + 1],
+						attrib.colors[3 * index.vertex_index + 2],
+					};
+
+					if (index.normal_index >= 0)
 					{
-						vertex.color = {
-							attrib.colors[colorIndex - 2],
-							attrib.colors[colorIndex - 1],
-							attrib.colors[colorIndex - 0],
+						vertex.normal = {
+							attrib.normals[3 * index.normal_index + 0],
+							attrib.normals[3 * index.normal_index + 2],
+							attrib.normals[3 * index.normal_index + 1],
 						};
 					}
-					else 
+
+					if (index.texcoord_index >= 0)
 					{
-						vertex.color = { 1.f, 1.f, 1.f };  // set default color
+						vertex.uv = {
+							attrib.texcoords[2 * index.texcoord_index + 0],
+							attrib.texcoords[2 * index.texcoord_index + 1],
+						};
 					}
-				}
 
-				if (index.normal_index >= 0)
-				{
-					vertex.normal = {
-						attrib.normals[3 * index.normal_index + 0],
-						attrib.normals[3 * index.normal_index + 2],
-						attrib.normals[3 * index.normal_index + 1],
-					};
-				}
+					if (uniqueVertices.count(vertex) == 0)
+					{
+						uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+						vertices.push_back(vertex);
+					}
+					indices.push_back(uniqueVertices[vertex]);
 
-				if (index.texcoord_index >= 0)
-				{
-					vertex.uv = {
-						attrib.texcoords[2 * index.texcoord_index + 0],
-						attrib.texcoords[2 * index.texcoord_index + 1],
-					};
 				}
-
-				if (uniqueVertices.count(vertex) == 0) 
-				{
-					uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-					vertices.push_back(vertex);
-				}
-				indices.push_back(uniqueVertices[vertex]);
 			}
 		}
 	}

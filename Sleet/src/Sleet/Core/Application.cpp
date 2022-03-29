@@ -60,11 +60,11 @@ namespace Sleet {
 
 	void Application::loadGameObjects()
 	{
-		Ref<VulkanModel> model = VulkanModel::createModelFromFile(device, "assets/models/smooth_vase.obj");
+		Ref<VulkanModel> model = VulkanModel::createModelFromFile(device, "assets/models/flat_vase.obj");
 
 		auto gameObject = GameObject::createGameObject();
 		gameObject.model = model;
-		gameObject.transform.translation = { 0.f, 0.f, 2.5f };
+		gameObject.transform.translation = { 0.f, 1.f, 2.5f };
 		gameObject.transform.scale = { 5.f, 5.f, 5.f };
 
 		gameObjects.push_back(std::move(gameObject));
