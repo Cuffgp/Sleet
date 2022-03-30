@@ -23,7 +23,7 @@ namespace Sleet {
 
 	Scope<DescriptorSetLayout> DescriptorSetLayout::Builder::build() const 
 	{
-		return std::make_unique<DescriptorSetLayout>(lveDevice, bindings);
+		return CreateScope<DescriptorSetLayout>(device, bindings);
 	}
 
 	// *************** Descriptor Set Layout *********************

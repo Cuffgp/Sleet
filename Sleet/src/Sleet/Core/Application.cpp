@@ -21,6 +21,10 @@ namespace Sleet {
 
 	Application::Application()
 	{
+		globalPool = DescriptorPool::Builder(device)
+			.setMaxSets(VulkanSwapchain::MAX_FRAMES_IN_FLIGHT)
+			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapchain::MAX_FRAMES_IN_FLIGHT)
+			.build();
 		loadGameObjects();
 	}
 
@@ -45,7 +49,23 @@ namespace Sleet {
 			uboBuffers[i]->map();
 		}
 
-		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapchainRenderPass() };
+		auto globalSetLayout = DescriptorSetLayout::Builder(device)
+			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 1)
+			.build();
+
+		std::vector<VkDescriptorSet> globalDescriptorSets(VulkanSwapchain::MAX_FRAMES_IN_FLIGHT);
+		for (int i = 0; i < globalDescriptorSets.size(); i++)
+		{
+			auto bufferInfo = uboBuffers[i]->descriptorInfo();
+			DescriptorWriter(*globalSetLayout, *globalPool)
+				.writeBuffer(0, &bufferInfo)
+				.build(globalDescriptorSets[i]);
+		}
+
+		SimpleRenderSystem simpleRenderSystem{ 
+			device, 
+			renderer.getSwapchainRenderPass(), 
+			globalSetLayout->getDescriptorSetLayout()};
 		Camera camera{};
 
 		auto viewerObject = GameObject::createGameObject();
@@ -74,7 +94,8 @@ namespace Sleet {
 					frameIndex,
 					frameTime,
 					commandBuffer,
-					camera
+					camera,
+					globalDescriptorSets[frameIndex]
 				};
 
 				// Update

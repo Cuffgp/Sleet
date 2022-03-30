@@ -4,6 +4,7 @@
 #include "Sleet/Vulkan/VulkanDevice.h"
 #include "Sleet/Vulkan/VulkanPipeline.h"
 #include "Sleet/Vulkan/VulkanRenderer.h"
+#include "Sleet/Vulkan/VulkanDescriptor.h"
 #include "Sleet/Core/GameObject.h"
 #include "Sleet/Core/Camera.h"
 
@@ -31,6 +32,7 @@ namespace Sleet {
 		VulkanDevice device{ window };
 		VulkanRenderer renderer{ window, device };
 
+		Scope<DescriptorPool> globalPool{};
 		std::vector<GameObject> gameObjects;
 	};
 

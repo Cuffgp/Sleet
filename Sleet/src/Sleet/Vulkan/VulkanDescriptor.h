@@ -12,7 +12,7 @@ namespace Sleet {
 		class Builder 
 		{
 		public:
-			Builder(VulkanDevice& lveDevice) : lveDevice{ lveDevice } {}
+			Builder(VulkanDevice& device) : device{ device } {}
 
 			Builder& addBinding(
 				uint32_t binding,
@@ -22,7 +22,7 @@ namespace Sleet {
 			Scope<DescriptorSetLayout> build() const;
 
 		private:
-			VulkanDevice& lveDevice;
+			VulkanDevice& device;
 			std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings{};
 		};
 

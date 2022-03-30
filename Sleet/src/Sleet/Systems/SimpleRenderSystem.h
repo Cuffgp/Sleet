@@ -11,7 +11,7 @@ namespace Sleet {
 	class SimpleRenderSystem
 	{
 	public:
-		SimpleRenderSystem(VulkanDevice &device, VkRenderPass renderPass);
+		SimpleRenderSystem(VulkanDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		~SimpleRenderSystem();
 
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
@@ -20,7 +20,7 @@ namespace Sleet {
 		void renderGameObjects(FrameInfo &frameInfo, std::vector<GameObject> &gameObjects);
 
 	private:
-		void createPipelineLayout();
+		void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void createPipeline(VkRenderPass renderPass);
 
 		VulkanDevice &device;
