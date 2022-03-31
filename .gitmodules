@@ -1,3 +1,7 @@
 [submodule "Sleet/vendor/GLFW"]
 	path = Sleet/vendor/GLFW
 	url = https://github.com/glfw/glfw
+[submodule "Sleet/vendor/imgui"]
+	path = Sleet/vendor/imgui
+	url = https://github.com/ocornut/imgui
+	branch = docking

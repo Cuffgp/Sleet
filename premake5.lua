@@ -18,7 +18,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "Sleet/vendor/glfw/include"
---IncludeDir["ImGui"] = "Sleet/vendor/imgui"
+IncludeDir["ImGui"] = "Sleet/vendor/imgui"
 IncludeDir["Vulkan"] = "C:/VulkanSDK/1.3.204.1/Include"
 IncludeDir["glm"] = "Sleet/vendor/glm"
 
@@ -57,7 +57,7 @@ project "Sleet"
 	{
 		"%{prj.name}/src",
 		"%{IncludeDir.GLFW}",
-		--"%{IncludeDir.ImGui}",
+		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.Vulkan}",
 		"%{IncludeDir.glm}",
 		"%{prj.name}/vendor"
@@ -66,7 +66,7 @@ project "Sleet"
 	links
 	{
 		"GLFW",
-		--"ImGui",
+		"ImGui",
 		"%{Library.Vulkan}"
 	}
 
