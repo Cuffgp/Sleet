@@ -2,6 +2,7 @@
 #include "Sleet/Core/Application.h"
 #include "Sleet/Core/KeyboardMovementController.h"
 #include "Sleet/Systems/SimpleRenderSystem.h"
+#include "Sleet/Systems/ImguiSystem.h"
 #include "Sleet/Vulkan/VulkanBuffer.h"
 
 #define GLM_FORCE_RADIANS
@@ -65,7 +66,16 @@ namespace Sleet {
 		SimpleRenderSystem simpleRenderSystem{ 
 			device, 
 			renderer.getSwapchainRenderPass(), 
-			globalSetLayout->getDescriptorSetLayout()};
+			globalSetLayout->getDescriptorSetLayout()
+		};
+
+		ImguiSystem imguiSystem{
+			window,
+			device,
+			renderer.getSwapchainRenderPass(),
+			VulkanSwapchain::MAX_FRAMES_IN_FLIGHT
+		};
+
 		Camera camera{};
 
 		auto viewerObject = GameObject::createGameObject();
@@ -105,8 +115,13 @@ namespace Sleet {
 				uboBuffers[frameIndex]->flush();
 
 				// Render
+				imguiSystem.beginFrame();
 				renderer.beginSwapchainRenderPass(commandBuffer);
+
 				simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
+				imguiSystem.example();
+
+				imguiSystem.render(commandBuffer);
 				renderer.endSwapchainRenderPass(commandBuffer);
 				renderer.endFrame();
 			}
