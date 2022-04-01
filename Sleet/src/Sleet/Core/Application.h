@@ -32,6 +32,7 @@ namespace Sleet {
 		VulkanDevice device{ window };
 		VulkanRenderer renderer{ window, device };
 
+		Ref<VulkanTexture> texture{};
 		Scope<DescriptorPool> globalPool{};
 		std::vector<GameObject> gameObjects;
 	};

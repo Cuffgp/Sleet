@@ -69,11 +69,18 @@ namespace Sleet {
 		void copyBufferToImage(
 			VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount);
 
+		// Image Helper Functions
 		void createImageWithInfo(
 			const VkImageCreateInfo &imageInfo,
 			VkMemoryPropertyFlags properties,
 			VkImage &image,
 			VkDeviceMemory &imageMemory);
+		void transitionImageLayout(
+			VkImage image, 
+			VkFormat format, 
+			VkImageLayout oldLayout, 
+			VkImageLayout newLayout);
+		VkImageView createImageView(VkImage image, VkFormat format);
 
 		VkPhysicalDeviceProperties properties;
 

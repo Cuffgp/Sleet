@@ -209,6 +209,7 @@ namespace Sleet {
 		swapChainImageViews.resize(swapChainImages.size());
 		for (size_t i = 0; i < swapChainImages.size(); i++) 
 		{
+			/*
 			VkImageViewCreateInfo viewInfo{};
 			viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 			viewInfo.image = swapChainImages[i];
@@ -225,6 +226,9 @@ namespace Sleet {
 			{
 				SL_ERROR("Failed to create texture image view!");
 			}
+			*/
+
+			swapChainImageViews[i] = device.createImageView(swapChainImages[i], swapChainImageFormat);
 		}
 	}
 

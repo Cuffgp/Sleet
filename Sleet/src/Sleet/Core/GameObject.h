@@ -2,6 +2,7 @@
 
 #include "Sleet/Core/Base.h"
 #include "Sleet/Vulkan/VulkanModel.h"
+#include "Sleet/Vulkan/VulkanTexture.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -36,9 +37,11 @@ namespace Sleet {
 
 		id_t getId() const { return id; }
 
-		Ref<VulkanModel> model{};
-		glm::vec3 color{};
+		// Game object components
 		TransformComponent transform{};
+		glm::vec3 color{};
+		Ref<VulkanModel> model{};
+		Ref<VulkanTexture> texture{};
 
 	private:
 		GameObject(id_t objId) : id(objId) {}

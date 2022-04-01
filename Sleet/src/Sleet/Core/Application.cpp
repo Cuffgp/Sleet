@@ -4,6 +4,7 @@
 #include "Sleet/Systems/SimpleRenderSystem.h"
 #include "Sleet/Systems/ImguiSystem.h"
 #include "Sleet/Vulkan/VulkanBuffer.h"
+#include "Sleet/Vulkan/VulkanTexture.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -25,6 +26,7 @@ namespace Sleet {
 		globalPool = DescriptorPool::Builder(device)
 			.setMaxSets(VulkanSwapchain::MAX_FRAMES_IN_FLIGHT)
 			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapchain::MAX_FRAMES_IN_FLIGHT)
+			.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VulkanSwapchain::MAX_FRAMES_IN_FLIGHT)
 			.build();
 		loadGameObjects();
 	}
@@ -51,15 +53,18 @@ namespace Sleet {
 		}
 
 		auto globalSetLayout = DescriptorSetLayout::Builder(device)
-			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 1)
+			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 1)
+			.addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1)
 			.build();
 
 		std::vector<VkDescriptorSet> globalDescriptorSets(VulkanSwapchain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0; i < globalDescriptorSets.size(); i++)
 		{
 			auto bufferInfo = uboBuffers[i]->descriptorInfo();
+			auto textureInfo = texture->descriptorInfo();
 			DescriptorWriter(*globalSetLayout, *globalPool)
 				.writeBuffer(0, &bufferInfo)
+				.writeImage(1, &textureInfo)
 				.build(globalDescriptorSets[i]);
 		}
 
@@ -133,9 +138,11 @@ namespace Sleet {
 	void Application::loadGameObjects()
 	{
 		Ref<VulkanModel> model = VulkanModel::createModelFromFile(device, "assets/models/flat_vase.obj");
+		texture = CreateRef<VulkanTexture>(device, "assets/textures/wall.jpg");
 
 		auto gameObject = GameObject::createGameObject();
 		gameObject.model = model;
+		gameObject.texture = texture;
 		gameObject.transform.translation = { 0.f, 1.f, 2.5f };
 		gameObject.transform.scale = { 5.f, 5.f, 5.f };
 
