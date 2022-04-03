@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entt/entt.hpp"
+#include "Sleet/Scene/Component.h"
 
 namespace Sleet {
 
@@ -15,8 +16,8 @@ namespace Sleet {
 		Entity createEntity(std::string tag);
 
 		friend class Entity;
-	private:
 		entt::registry registry;
+	private:
 
 
 	};

@@ -17,6 +17,8 @@ namespace Sleet{
 
 		VkDescriptorImageInfo descriptorInfo();
 
+		static Scope<VulkanTexture> createTextureFromFile(VulkanDevice& device, const std::string& filepath);
+
 	private:
 
 		VulkanDevice& device;

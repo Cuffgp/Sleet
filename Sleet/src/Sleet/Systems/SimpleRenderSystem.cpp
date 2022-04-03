@@ -62,8 +62,7 @@ namespace Sleet {
 			pipelineConfig);
 	}
 
-
-	void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo, std::vector<GameObject> &gameObjects)
+	void SimpleRenderSystem::renderSceneObjects(FrameInfo& frameInfo, Scene& scene)
 	{
 		pipeline->bind(frameInfo.commandBuffer);
 
@@ -77,11 +76,11 @@ namespace Sleet {
 			0,
 			nullptr);
 
-		for (auto& obj : gameObjects)
+		for (auto [entity, transform, model] : scene.registry.view<TransformComponent, ModelComponent>().each())
 		{
 			SimplePushConstantData push{};
-			push.modelMatrix = obj.transform.mat4();
-			push.normalMatrix = obj.transform.normalMatrix();
+			push.modelMatrix = transform.mat4();
+			push.normalMatrix = transform.normalMatrix();
 
 			vkCmdPushConstants(
 				frameInfo.commandBuffer,
@@ -90,8 +89,9 @@ namespace Sleet {
 				0,
 				sizeof(SimplePushConstantData),
 				&push);
-			obj.model->bind(frameInfo.commandBuffer);
-			obj.model->draw(frameInfo.commandBuffer);
+
+			model.model->bind(frameInfo.commandBuffer);
+			model.model->draw(frameInfo.commandBuffer);
 		}
 	}
 

@@ -9,7 +9,6 @@ namespace Sleet {
 	VulkanTexture::VulkanTexture(VulkanDevice& device, const std::string& filepath):
 		device(device)
 	{
-		
 		// Read texture into c array using stb_image
 		int texWidth, texHeight, texChannels;
 		stbi_uc* pixels = stbi_load(filepath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
@@ -103,5 +102,10 @@ namespace Sleet {
 		imageInfo.sampler = textureSampler;
 
 		return imageInfo;
+	}
+
+	Scope<VulkanTexture> VulkanTexture::createTextureFromFile(VulkanDevice& device, const std::string& filepath)
+	{
+		return CreateScope<VulkanTexture>(device, filepath);
 	}
 }

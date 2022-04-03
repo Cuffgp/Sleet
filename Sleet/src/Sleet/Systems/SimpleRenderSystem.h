@@ -5,6 +5,9 @@
 #include "Sleet/Vulkan/FrameInfo.h"
 #include "Sleet/Core/GameObject.h"
 #include "Sleet/Core/Camera.h"
+#include "Sleet/Scene/Scene.h"
+#include "Sleet/Scene/Entity.h"
+#include "Sleet/Scene/Component.h"
 
 namespace Sleet {
 
@@ -18,6 +21,7 @@ namespace Sleet {
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
 		void renderGameObjects(FrameInfo &frameInfo, std::vector<GameObject> &gameObjects);
+		void renderSceneObjects(FrameInfo& frameInfo, Scene& scene);
 
 	private:
 		void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);

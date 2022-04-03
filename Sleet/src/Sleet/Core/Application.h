@@ -7,6 +7,9 @@
 #include "Sleet/Vulkan/VulkanDescriptor.h"
 #include "Sleet/Core/GameObject.h"
 #include "Sleet/Core/Camera.h"
+#include "Sleet/Scene/Scene.h"
+#include "Sleet/Scene/Entity.h"
+#include "Sleet/Scene/Component.h"
 
 namespace Sleet {
 
@@ -27,10 +30,13 @@ namespace Sleet {
 
 	private:
 		void loadGameObjects();
+		void loadScene();
 
 		Window window{ WIDTH, HEIGHT, "Hello Vulkan" };
 		VulkanDevice device{ window };
 		VulkanRenderer renderer{ window, device };
+
+		Scene scene;
 
 		Ref<VulkanTexture> texture{};
 		Scope<DescriptorPool> globalPool{};

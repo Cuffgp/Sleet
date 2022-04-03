@@ -2,7 +2,6 @@
 
 #include "Sleet/Scene/Scene.h"
 #include "Sleet/Scene/Entity.h"
-#include "Sleet/Scene/Component.h"
 
 namespace Sleet {
 

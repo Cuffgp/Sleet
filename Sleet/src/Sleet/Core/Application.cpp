@@ -28,7 +28,7 @@ namespace Sleet {
 			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapchain::MAX_FRAMES_IN_FLIGHT)
 			.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VulkanSwapchain::MAX_FRAMES_IN_FLIGHT)
 			.build();
-		loadGameObjects();
+		loadScene();
 	}
 
 	Application::~Application()
@@ -123,7 +123,7 @@ namespace Sleet {
 				imguiSystem.beginFrame();
 				renderer.beginSwapchainRenderPass(commandBuffer);
 
-				simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
+				simpleRenderSystem.renderSceneObjects(frameInfo, scene);
 				imguiSystem.example();
 
 				imguiSystem.render(commandBuffer);
@@ -135,18 +135,18 @@ namespace Sleet {
 		vkDeviceWaitIdle(device.device());
 	}
 
-	void Application::loadGameObjects()
+	void Application::loadScene()
 	{
 		Ref<VulkanModel> model = VulkanModel::createModelFromFile(device, "assets/models/flat_vase.obj");
 		texture = CreateRef<VulkanTexture>(device, "assets/textures/wall.jpg");
 
-		auto gameObject = GameObject::createGameObject();
-		gameObject.model = model;
-		gameObject.texture = texture;
-		gameObject.transform.translation = { 0.f, 1.f, 2.5f };
-		gameObject.transform.scale = { 5.f, 5.f, 5.f };
+		Entity gameObject = scene.createEntity("object");
+		gameObject.add_component<TransformComponent>();
+		gameObject.get_component<TransformComponent>().translation = { 0.f, 1.f, 2.5f };
+		gameObject.get_component<TransformComponent>().scale = { 5.f, 5.f, 5.f };
 
-		gameObjects.push_back(std::move(gameObject));
+		gameObject.add_component<ModelComponent>(model);
+		gameObject.add_component<TextureComponent>(texture);
 	}
 
 }

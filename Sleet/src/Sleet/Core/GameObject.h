@@ -4,20 +4,9 @@
 #include "Sleet/Vulkan/VulkanModel.h"
 #include "Sleet/Vulkan/VulkanTexture.h"
 
-#include "glm/gtc/matrix_transform.hpp"
+#include "Sleet/Scene/Component.h"
 
 namespace Sleet {
-
-	struct TransformComponent 
-	{
-		glm::vec3 translation{};  // (position offset)
-		glm::vec3 scale{ 1.f, 1.f, 1.f};
-		glm::vec3 rotation{};
-
-		glm::mat4 mat4();
-		glm::mat3 normalMatrix();
-
-	};
 
 	class GameObject
 	{
