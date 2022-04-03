@@ -141,12 +141,12 @@ namespace Sleet {
 		texture = CreateRef<VulkanTexture>(device, "assets/textures/wall.jpg");
 
 		Entity gameObject = scene.createEntity("object");
-		gameObject.add_component<TransformComponent>();
-		gameObject.get_component<TransformComponent>().translation = { 0.f, 1.f, 2.5f };
-		gameObject.get_component<TransformComponent>().scale = { 5.f, 5.f, 5.f };
+		gameObject.addComponent<TransformComponent>();
+		gameObject.getComponent<TransformComponent>().translation = { 0.f, 1.f, 2.5f };
+		gameObject.getComponent<TransformComponent>().scale = { 5.f, 5.f, 5.f };
 
-		gameObject.add_component<ModelComponent>(model);
-		gameObject.add_component<TextureComponent>(texture);
+		gameObject.addComponent<ModelComponent>(model);
+		gameObject.addComponent<TextureComponent>(texture);
 	}
 
 }

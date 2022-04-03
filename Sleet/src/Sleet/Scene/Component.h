@@ -2,6 +2,8 @@
 
 #include "Sleet/Vulkan/VulkanModel.h"
 #include "Sleet/Vulkan/VulkanTexture.h"
+#include "Sleet/Core/Camera.h"
+//#include "Sleet/Core/KeyboardMovementController.h"
 
 #include <string>
 
@@ -49,5 +51,15 @@ namespace Sleet {
 			: texture(texture) {}
 
 		operator Ref<VulkanTexture>() { return texture; }
+	};
+
+	struct CameraComponent
+	{
+
+	};
+
+	struct KeyboardMovementComponent
+	{
+
 	};
 }

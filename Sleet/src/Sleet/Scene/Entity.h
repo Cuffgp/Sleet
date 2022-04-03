@@ -12,28 +12,31 @@ namespace Sleet {
 		Entity();
 		Entity(entt::entity entityHandle, Scene* scene);
 
-		inline entt::entity get_handle() { return entityHandle; }
+		inline entt::entity getHandle() { return entityHandle; }
 
 		template<typename T, typename... Args>
-		T& add_component(Args&&... args)
+		T& addComponent(Args&&... args)
 		{
+			SL_ASSERT(!hasComponent<T>(), "Entity already has component");
 			return scene->registry.emplace<T>(entityHandle, std::forward<Args>(args)...);
 		}
 
 		template<typename T>
-		T& get_component()
+		T& getComponent()
 		{
+			SL_ASSERT(hasComponent<T>(), "Entity does not have a component");
 			return scene->registry.get<T>(entityHandle);
 		}
 
 		template<typename T>
-		void remove_component()
+		void removeComponent()
 		{
+			SL_ASSERT(hasComponent<T>(), "Entity does not have a component");
 			return scene->registry.remove<T>(entityHandle);
 		}
 
 		template<typename T>
-		bool has_component()
+		bool hasComponent()
 		{
 			return scene->registry.all_of<T>(entityHandle);
 		}

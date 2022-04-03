@@ -14,7 +14,7 @@ namespace Sleet {
 	Entity Scene::createEntity(std::string tag)
 	{
 		Entity entity(registry.create(), this);
-		entity.add_component<TagComponent>(tag);
+		entity.addComponent<TagComponent>(tag);
 		return entity;
 	}
 
