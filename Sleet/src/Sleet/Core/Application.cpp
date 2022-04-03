@@ -23,6 +23,8 @@ namespace Sleet {
 
 	Application::Application()
 	{
+		Input::init(window.getGLFWwindow());
+
 		globalPool = DescriptorPool::Builder(device)
 			.setMaxSets(VulkanSwapchain::MAX_FRAMES_IN_FLIGHT)
 			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapchain::MAX_FRAMES_IN_FLIGHT)
@@ -96,7 +98,7 @@ namespace Sleet {
 			float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
 			currentTime = newTime;
 
-			cameraController.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject);
+			cameraController.moveInPlaneXZ(frameTime, viewerObject);
 			camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
 			float aspect = renderer.getAspectRatio();

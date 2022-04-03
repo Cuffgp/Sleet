@@ -22,7 +22,7 @@ namespace Sleet {
 			int lookDown = GLFW_KEY_DOWN;
 		};
 
-		void moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& gameObject);
+		void moveInPlaneXZ(float dt, GameObject& gameObject);
 
 		KeyMappings keys{};
 		float moveSpeed{ 3.f };

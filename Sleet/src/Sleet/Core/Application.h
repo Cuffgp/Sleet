@@ -7,6 +7,7 @@
 #include "Sleet/Vulkan/VulkanDescriptor.h"
 #include "Sleet/Core/GameObject.h"
 #include "Sleet/Core/Camera.h"
+#include "Sleet/Core/Input.h"
 #include "Sleet/Scene/Scene.h"
 #include "Sleet/Scene/Entity.h"
 #include "Sleet/Scene/Component.h"
