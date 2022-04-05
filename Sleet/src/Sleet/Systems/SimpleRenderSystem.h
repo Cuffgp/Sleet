@@ -3,7 +3,6 @@
 #include "Sleet/Vulkan/VulkanDevice.h"
 #include "Sleet/Vulkan/VulkanPipeline.h"
 #include "Sleet/Vulkan/FrameInfo.h"
-#include "Sleet/Core/GameObject.h"
 #include "Sleet/Core/Camera.h"
 #include "Sleet/Scene/Scene.h"
 #include "Sleet/Scene/Entity.h"

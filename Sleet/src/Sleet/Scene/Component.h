@@ -21,9 +21,15 @@ namespace Sleet {
 
 	struct TransformComponent
 	{
-		glm::vec3 translation{};  // (position offset)
+
+		TransformComponent() = default;
+		TransformComponent(const TransformComponent& other) = default;
+		TransformComponent(glm::vec3 translation, glm::vec3 scale = { 1.f, 1.f, 1.f }, glm::vec3 rotation = {0.f, 0.f, 0.f}) :
+			translation(translation), scale(scale), rotation(rotation) {}
+
+		glm::vec3 translation{ 0.f, 0.f, 0.f };  // (position offset)
 		glm::vec3 scale{ 1.f, 1.f, 1.f };
-		glm::vec3 rotation{};
+		glm::vec3 rotation{ 0.f, 0.f, 0.f };
 
 		glm::mat4 mat4();
 		glm::mat3 normalMatrix();
@@ -55,7 +61,10 @@ namespace Sleet {
 
 	struct CameraComponent
 	{
+		Camera camera;
 
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent& other) = default;
 	};
 
 	struct KeyboardMovementComponent

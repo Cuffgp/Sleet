@@ -83,9 +83,13 @@ namespace Sleet {
 			VulkanSwapchain::MAX_FRAMES_IN_FLIGHT
 		};
 
-		Camera camera{};
+		Entity viewerEntity = scene.createEntity("viewer");
+		viewerEntity.addComponent<TransformComponent>();
+		viewerEntity.addComponent<CameraComponent>();
 
-		auto viewerObject = GameObject::createGameObject();
+		auto camera = viewerEntity.getComponent<CameraComponent>().camera;
+		auto transform = viewerEntity.getComponent<TransformComponent>();
+
 		KeyboardMovementController cameraController{};
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
@@ -98,11 +102,12 @@ namespace Sleet {
 			float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
 			currentTime = newTime;
 
-			cameraController.moveInPlaneXZ(frameTime, viewerObject);
-			camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
+
+			cameraController.moveInPlaneXZ(frameTime, transform);
+			camera.setViewYXZ(transform.translation, transform.rotation);
 
 			float aspect = renderer.getAspectRatio();
-			camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
+			camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
 			
 			if (auto commandBuffer = renderer.beginFrame())
 			{
@@ -142,13 +147,15 @@ namespace Sleet {
 		Ref<VulkanModel> model = VulkanModel::createModelFromFile(device, "assets/models/flat_vase.obj");
 		texture = CreateRef<VulkanTexture>(device, "assets/textures/wall.jpg");
 
-		Entity gameObject = scene.createEntity("object");
-		gameObject.addComponent<TransformComponent>();
-		gameObject.getComponent<TransformComponent>().translation = { 0.f, 1.f, 2.5f };
-		gameObject.getComponent<TransformComponent>().scale = { 5.f, 5.f, 5.f };
+		Entity gameObject1 = scene.createEntity("object");
+		gameObject1.addComponent<TransformComponent>(glm::vec3(-0.75f, 1.f, 2.5f), glm::vec3(5.f, 5.f, 5.f));
+		gameObject1.addComponent<ModelComponent>(model);
+		gameObject1.addComponent<TextureComponent>(texture);
 
-		gameObject.addComponent<ModelComponent>(model);
-		gameObject.addComponent<TextureComponent>(texture);
+		Entity gameObject2 = scene.createEntity("object");
+		gameObject2.addComponent<TransformComponent>(glm::vec3(0.75f, 1.f, 2.5f), glm::vec3(5.f, 5.f, 5.f));
+		gameObject2.addComponent<ModelComponent>(model);
+		gameObject2.addComponent<TextureComponent>(texture);
 	}
 
 }

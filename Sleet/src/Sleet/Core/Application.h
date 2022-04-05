@@ -5,7 +5,6 @@
 #include "Sleet/Vulkan/VulkanPipeline.h"
 #include "Sleet/Vulkan/VulkanRenderer.h"
 #include "Sleet/Vulkan/VulkanDescriptor.h"
-#include "Sleet/Core/GameObject.h"
 #include "Sleet/Core/Camera.h"
 #include "Sleet/Core/Input.h"
 #include "Sleet/Scene/Scene.h"
@@ -30,7 +29,6 @@ namespace Sleet {
 		void run();
 
 	private:
-		void loadGameObjects();
 		void loadScene();
 
 		Window window{ WIDTH, HEIGHT, "Hello Vulkan" };
@@ -41,7 +39,6 @@ namespace Sleet {
 
 		Ref<VulkanTexture> texture{};
 		Scope<DescriptorPool> globalPool{};
-		std::vector<GameObject> gameObjects;
 	};
 
 }

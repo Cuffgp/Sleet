@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Sleet/Core/GameObject.h"
 #include "Sleet/Core/Window.h"
+#include "Sleet/Scene/Component.h"
 
 namespace Sleet {
 
@@ -22,7 +22,7 @@ namespace Sleet {
 			int lookDown = GLFW_KEY_DOWN;
 		};
 
-		void moveInPlaneXZ(float dt, GameObject& gameObject);
+		void moveInPlaneXZ(float dt, TransformComponent& transformComponent);
 
 		KeyMappings keys{};
 		float moveSpeed{ 3.f };

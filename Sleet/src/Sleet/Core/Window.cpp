@@ -7,7 +7,7 @@ namespace Sleet {
 
 	void glfwErrorCallback(int error, const char* description)
 	{
-		SL_ERROR("GLFW Error {}: {}", error, description);
+		//SL_ERROR("GLFW Error {}: {}", error, description);
 	}
 
 

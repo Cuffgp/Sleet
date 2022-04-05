@@ -9,7 +9,7 @@ namespace Sleet {
 	class Entity
 	{
 	public:
-		Entity();
+		Entity() {};
 		Entity(entt::entity entityHandle, Scene* scene);
 
 		inline entt::entity getHandle() { return entityHandle; }
