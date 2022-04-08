@@ -1,5 +1,6 @@
 #include "slpch.h"
 #include "Sleet/Core/Application.h"
+#include "Sleet/Core/Log.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -13,7 +14,7 @@ int main()
 
 	try 
 	{
-		app.run();
+		app.Run();
 	}
 
 	catch(const std::exception &e)

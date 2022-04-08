@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #define SL_BIND_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+#define BIT(x) (1 << x)
 
 #define SL_DEBUGBREAK() __debugbreak()
 #define SL_EXPAND_MACRO(x) x

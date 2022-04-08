@@ -1,11 +1,15 @@
 #pragma once
 
+#include "Sleet/Events/Event.h"
+
 #include <string>
 
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
 
 namespace Sleet {
+
+	using EventCallbackFn = std::function<void(Event&)>;
 
 	class Window
 	{
@@ -16,23 +20,29 @@ namespace Sleet {
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
 
+		void SetEventCallback(const EventCallbackFn& callback) { data.EventCallback = callback; }
 		bool shouldClose() { return glfwWindowShouldClose(window); }
-		VkExtent2D getExtent() { return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) }; }
-		bool wasWindowResized() { return framebufferResized; }
-		void resetWindowResizedFlag() { framebufferResized = false; }
+		VkExtent2D getExtent() { return { static_cast<uint32_t>(data.width), static_cast<uint32_t>(data.height) }; }
+		bool wasWindowResized() { return data.framebufferResized; }
+		void resetWindowResizedFlag() { data.framebufferResized = false; }
 		GLFWwindow* getGLFWwindow() const { return window; }
 
 		void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
 	private:
-		static void framebufferResizedCallback(GLFWwindow* window, int width, int height);
 		void initWindow();
 
-		int width;
-		int height;
-		bool framebufferResized = false;
+		struct WindowData
+		{
+			std::string title;
+			unsigned int width, height;
+			bool VSync;
+			bool framebufferResized = false;
 
-		std::string windowName;
+			EventCallbackFn EventCallback;
+		};
+
+		WindowData data;
 		GLFWwindow* window;
 	};
 

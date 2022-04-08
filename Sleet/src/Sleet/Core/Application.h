@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Sleet/Core/Base.h"
 #include "Sleet/Core/Window.h"
 #include "Sleet/Vulkan/VulkanDevice.h"
 #include "Sleet/Vulkan/VulkanPipeline.h"
@@ -10,6 +11,8 @@
 #include "Sleet/Scene/Scene.h"
 #include "Sleet/Scene/Entity.h"
 #include "Sleet/Scene/Component.h"
+#include "Sleet/Events/Event.h"
+#include "Sleet/Events/ApplicationEvent.h"
 
 namespace Sleet {
 
@@ -26,7 +29,10 @@ namespace Sleet {
 		Application(const Application&) = delete;
 		Application& operator=(const Application&) = delete;
 
-		void run();
+		void Run();
+		void OnEvent(Event& e);
+		bool OnWindowResize(WindowResizeEvent& e);
+		bool OnWindowClose(WindowCloseEvent& e);
 
 	private:
 		void loadScene();
@@ -37,8 +43,10 @@ namespace Sleet {
 
 		Scene scene;
 
-		Ref<VulkanTexture> texture{};
+		Ref<VulkanTexture> texture1{};
+		Ref<VulkanTexture> texture2{};
 		Scope<DescriptorPool> globalPool{};
+		Scope<DescriptorPool> modelPool{};
 	};
 
 }
