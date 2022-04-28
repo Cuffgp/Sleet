@@ -65,7 +65,7 @@ namespace Sleet {
 		for (int i = 0; i < globalDescriptorSets.size(); i++)
 		{
 			auto bufferInfo = uboBuffers[i]->descriptorInfo();
-			auto textureInfo = texture1->descriptorInfo();
+			auto textureInfo = texture2->descriptorInfo();
 			DescriptorWriter(*globalSetLayout, *globalPool)
 				.writeBuffer(0, &bufferInfo)
 				.writeImage(1, &textureInfo)
@@ -166,8 +166,9 @@ namespace Sleet {
 	{
 		Ref<VulkanModel> model = VulkanModel::createModelFromFile(device, "assets/models/flat_vase.obj");
 		Ref<VulkanModel> quad = VulkanModel::createModelFromFile(device, "assets/models/quad.obj");
-		texture1 = CreateRef<VulkanTexture>(device, "assets/textures/wall.jpg");
-		texture2 = CreateRef<VulkanTexture>(device, "assets/textures/container.jpg");
+		texture1 = VulkanTexture::createTextureFromFile(device, "assets/textures/wall.jpg");
+		uint32_t whiteTexture = 0xffffffff;
+		texture2 = VulkanTexture::createTexture(device, &whiteTexture, 1, 1);
 
 		Entity gameObject1 = scene.createEntity("object");
 		gameObject1.addComponent<TransformComponent>(glm::vec3(-0.75f, 0.5f, 0.f), glm::vec3(3.f, 1.5f, 3.f));

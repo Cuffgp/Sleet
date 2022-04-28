@@ -132,20 +132,7 @@ namespace Sleet {
 				data.EventCallback(event);
 			});
 
-		/*
-		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
-			{
-				auto windowData = *(WindowData*)(glfwGetWindowUserPointer(window));
-
-				windowData.framebufferResized = true;
-				windowData.width = width;
-				windowData.height = height;
-
-				WindowResizeEvent event(width, height);
-				windowData.EventCallback(event);
-			});
-		*/
-
+		glfwSetWindowSizeCallback(window, nullptr);
 		glfwSetCursorEnterCallback(window, nullptr);
 		glfwSetWindowFocusCallback(window, nullptr);
 		glfwSetDropCallback(window, nullptr);

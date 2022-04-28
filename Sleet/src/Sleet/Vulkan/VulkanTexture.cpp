@@ -6,19 +6,23 @@
 
 namespace Sleet {
 
-	VulkanTexture::VulkanTexture(VulkanDevice& device, const std::string& filepath):
+	VulkanTexture::VulkanTexture(VulkanDevice& device, void* data, uint32_t texWidth, uint32_t texHeight):
 		device(device)
 	{
-		// Read texture into c array using stb_image
-		int texWidth, texHeight, texChannels;
-		stbi_uc* pixels = stbi_load(filepath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+		createTexture(data, texWidth, texHeight);
+	}
+
+	VulkanTexture::~VulkanTexture()
+	{
+		vkDestroySampler(device.device(), textureSampler, nullptr);
+		vkDestroyImageView(device.device(), textureImageView, nullptr);
+		vkDestroyImage(device.device(), textureImage, nullptr);
+		vkFreeMemory(device.device(), textureImageMemory, nullptr);
+	}
+
+	void VulkanTexture::createTexture(void* data, uint32_t texWidth, uint32_t texHeight)
+	{
 		VkDeviceSize imageSize = texWidth * texHeight * 4;
-
-		if (!pixels) 
-		{
-			SL_ERROR("Failed to load texture image!");
-		}
-
 		// Transfer texture into VkImage using a staging buffer
 		VulkanBuffer stagingBuffer(
 			device,
@@ -29,8 +33,7 @@ namespace Sleet {
 		);
 
 		stagingBuffer.map();
-		stagingBuffer.writeToBuffer((void*)pixels);
-		stbi_image_free(pixels);
+		stagingBuffer.writeToBuffer((void*)data);
 
 		VkImageCreateInfo imageInfo{};
 		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -80,18 +83,10 @@ namespace Sleet {
 		samplerInfo.minLod = 0.0f;
 		samplerInfo.maxLod = 0.0f;
 
-		if (vkCreateSampler(device.device(), &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS) 
+		if (vkCreateSampler(device.device(), &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS)
 		{
 			SL_ERROR("Failed to create texture sampler!");
 		}
-	}
-
-	VulkanTexture::~VulkanTexture()
-	{
-		vkDestroySampler(device.device(), textureSampler, nullptr);
-		vkDestroyImageView(device.device(), textureImageView, nullptr);
-		vkDestroyImage(device.device(), textureImage, nullptr);
-		vkFreeMemory(device.device(), textureImageMemory, nullptr);
 	}
 
 	VkDescriptorImageInfo VulkanTexture::descriptorInfo()
@@ -106,6 +101,22 @@ namespace Sleet {
 
 	Scope<VulkanTexture> VulkanTexture::createTextureFromFile(VulkanDevice& device, const std::string& filepath)
 	{
-		return CreateScope<VulkanTexture>(device, filepath);
+		// Read texture into c array using stb_image
+		int texWidth, texHeight, texChannels;
+		stbi_uc* pixels = stbi_load(filepath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+
+		if (!pixels)
+		{
+			SL_ERROR("Failed to load texture image!");
+		}
+
+		auto texture = CreateScope<VulkanTexture>(device, pixels, texWidth, texHeight);
+		stbi_image_free(pixels);
+		return texture;
+	}
+
+	Scope<VulkanTexture> VulkanTexture::createTexture(VulkanDevice& device, void* data, uint32_t width, uint32_t height)
+	{
+		return CreateScope<VulkanTexture>(device, data, width, height);
 	}
 }
