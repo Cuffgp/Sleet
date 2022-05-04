@@ -14,5 +14,3 @@ bin-int/
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
-
-premake5.exe

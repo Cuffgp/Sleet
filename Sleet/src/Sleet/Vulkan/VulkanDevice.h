@@ -41,6 +41,7 @@ namespace Sleet {
 		VulkanDevice(VulkanDevice &&) = delete;
 		VulkanDevice &operator=(VulkanDevice &&) = delete;
 
+		static VulkanDevice* Get() { return s_Device; }
 		VkCommandPool getCommandPool() { return commandPool; }
 		VkDevice device() { return device_; }
 		VkSurfaceKHR surface() { return surface_; }
@@ -115,6 +116,8 @@ namespace Sleet {
 
 		const std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
 		const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+		static VulkanDevice* s_Device;
 	};
 
 }

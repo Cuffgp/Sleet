@@ -157,8 +157,6 @@ namespace Sleet {
 		VkRect2D scissor{ {0, 0}, swapchain->getSwapChainExtent() };
 		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
-
-
 	}
 
 	void VulkanRenderer::endSwapchainRenderPass(VkCommandBuffer commandBuffer)

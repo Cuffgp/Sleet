@@ -3,6 +3,8 @@
 
 namespace Sleet {
 
+	VulkanDevice* VulkanDevice::s_Device = nullptr;
+
 	// local callback functions
 	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -51,6 +53,7 @@ namespace Sleet {
 	// class member functions
 	VulkanDevice::VulkanDevice(Window& window) : window{ window }
 	{
+		s_Device = this;
 		createInstance();
 		setupDebugMessenger();
 		createSurface();
