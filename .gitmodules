@@ -1,0 +1,3 @@
+[submodule "Sleet/vendor/glfw"]
+	path = Sleet/vendor/glfw
+	url = https://github.com/TheCherno/glfw
