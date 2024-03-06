@@ -69,7 +69,7 @@ namespace Sleet {
 
 		m_UniformBuffer->Write(m_ConstantSet);
 
-		m_Pipeline = Pipeline::Create("assets/shaders/uniform_shader", descriptorSetMap);
+		m_Pipeline = Pipeline::Create("assets/shaders/uniform_shader");
 
 		SL_INFO("Index Count {}", m_IndexBuffer->GetIndexCount());
 
