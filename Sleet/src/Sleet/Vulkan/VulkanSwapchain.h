@@ -23,6 +23,7 @@ namespace Sleet {
 		VkImageView GetImageView(uint32_t index) { return m_SwapchainImageViews[index]; }
 		VkImageView GetDepthView(uint32_t index) { return m_DepthImageViews[index]; }
 		VkImage GetImage(uint32_t index) { return m_SwapchainImages[index]; }
+		VkImage GetDepthImage(uint32_t index) { return m_DepthImages[index]; }
 
 		VkResult AquireNextImage(uint32_t* imageIndex, VkSemaphore imageAvalible);
 		VkResult QueuePresent(uint32_t* imageIndex, VkSemaphore imageAvalible);

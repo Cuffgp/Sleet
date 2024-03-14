@@ -20,10 +20,13 @@ namespace Sleet {
 		static void BindPipeline(Ref<Pipeline> pipeline);
 		static void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer);
 		static void BindIndexBuffer(Ref<IndexBuffer> indexBuffer);
-		static void BindDescriptorSet(Ref<DescriptorSet> descriptorSet);
+		static void BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet);
 		static void DrawIndexed(uint32_t indexCount);
 
 		static void SetTransform(glm::mat4 transform);
+
+		static uint32_t FramesInFlight();
+		static uint32_t CurrentFrameIndex();
 
 	private:
 		static RendererAPI* s_Renderer;

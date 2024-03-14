@@ -29,10 +29,10 @@ namespace Sleet {
 		m_Buffer->WriteToBuffer(data);
 	}
 
-	void VulkanUniformBuffer::Write(Ref<DescriptorSet> descriptorSet)
+	void VulkanUniformBuffer::Write(Ref<DescriptorSet> descriptorSet, uint32_t binding)
 	{
 		auto set = std::static_pointer_cast<VulkanDescriptorSet>(descriptorSet)->GetDescriptorSet();
-		WriteToSet(set, 0);
+		WriteToSet(set, binding);
 	}
 
 	void VulkanUniformBuffer::WriteToSet(VkDescriptorSet set, uint32_t binding)
@@ -42,7 +42,7 @@ namespace Sleet {
 		VkWriteDescriptorSet descriptorWrite{};
 		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descriptorWrite.dstSet = set;
-		descriptorWrite.dstBinding = 0;
+		descriptorWrite.dstBinding = binding;
 		descriptorWrite.dstArrayElement = 0;
 		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		descriptorWrite.descriptorCount = 1;

@@ -66,6 +66,7 @@ project "Sleet"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor",
+		"%{prj.name}/vendor/tiny_gltf/",
 		"%{prj.name}/vendor/glfw/include",
 		"%{IncludeDir.VulkanSDK}"
 	}

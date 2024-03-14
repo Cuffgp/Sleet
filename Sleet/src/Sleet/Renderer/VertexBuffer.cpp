@@ -7,9 +7,9 @@
 
 namespace Sleet {
 
-	Ref<VertexBuffer> VertexBuffer::Create(void* data, uint32_t size, VertexInput input)
+	Ref<VertexBuffer> VertexBuffer::Create(void* data, uint32_t size)
 	{
-		return CreateRef<VulkanVertexBuffer>(data, size, input); 
+		return CreateRef<VulkanVertexBuffer>(data, size); 
 	}
 
 

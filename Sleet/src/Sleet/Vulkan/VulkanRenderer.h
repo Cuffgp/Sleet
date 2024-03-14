@@ -24,7 +24,7 @@ namespace Sleet {
 		virtual void BindPipeline(Ref<Pipeline> pipeline) override;
 		virtual void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer) override;
 		virtual void BindIndexBuffer(Ref<IndexBuffer> indexBuffer) override;
-		virtual void BindDescriptorSet(Ref<DescriptorSet> descriptorSet) override;
+		virtual void BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet) override;
 
 		virtual void DrawIndexed(uint32_t indexCount) override;
 

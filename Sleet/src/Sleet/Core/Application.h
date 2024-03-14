@@ -8,6 +8,7 @@
 #include "Sleet/Renderer/IndexBuffer.h"
 #include "Sleet/Renderer/UniformBuffer.h"
 #include "Sleet/Renderer/DescriptorSet.h"
+#include "Sleet/Renderer/Texture.h"
 
 namespace Sleet {
 	
@@ -26,12 +27,20 @@ namespace Sleet {
 		Scope<Window> m_Window;
 		float m_LastTime = 0;
 
+		Ref<Pipeline> m_SimplePipeline;
+		Ref<VertexBuffer> m_CubeVertex;
+		Ref<IndexBuffer> m_CubeIndex;
 
-		Ref<Pipeline> m_Pipeline;
+		Ref<Pipeline> m_MeshPipeline;
 		Ref<VertexBuffer> m_VertexBuffer;
 		Ref<IndexBuffer> m_IndexBuffer;
 		Ref<UniformBuffer> m_UniformBuffer;
 		Ref<DescriptorSet> m_ConstantSet;
+
+		std::vector<Ref<DescriptorSet>> m_SceneDescriptorSet;
+		std::vector<Ref<UniformBuffer>> m_SceneUniform;
+
+		Ref<Texture> m_Texture;
 
 		static Application* s_Instance;
 	};

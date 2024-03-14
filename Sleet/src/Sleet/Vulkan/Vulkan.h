@@ -42,7 +42,11 @@ namespace Sleet {
 
 			if (stageFlags & ShaderStage::Vertex) flags |= VK_SHADER_STAGE_VERTEX_BIT;
 			if (stageFlags & ShaderStage::Fragment) flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
-			if (stageFlags & ShaderStage::All) flags |= VK_SHADER_STAGE_ALL_GRAPHICS;
+			if (stageFlags & ShaderStage::All) 
+			{
+				flags |= VK_SHADER_STAGE_VERTEX_BIT;
+				flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+			}
 
 			return VkShaderStageFlagBits(flags);
 		}

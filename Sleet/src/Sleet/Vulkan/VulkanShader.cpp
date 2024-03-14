@@ -296,13 +296,12 @@ namespace Sleet {
 		result = spvReflectEnumerateDescriptorSets(&module, &descriptorSetCount, sets.data());
 		assert(result == SPV_REFLECT_RESULT_SUCCESS);
 
-		for (int set = 0; set < descriptorSetCount; set++)
+		for (const auto& reflectionSet : sets)
 		{
-			const SpvReflectDescriptorSet& reflectionSet = *(sets[set]);
-
-			for (int i = 0; i < reflectionSet.binding_count; i++)
+			uint32_t set = reflectionSet->set;
+			for (int i = 0; i < reflectionSet->binding_count; i++)
 			{
-				const SpvReflectDescriptorBinding& reflectionBinding = *(reflectionSet.bindings[i]);
+				const SpvReflectDescriptorBinding& reflectionBinding = *(reflectionSet->bindings[i]);
 
 				uint32_t binding = reflectionBinding.binding;
 				SpvReflectDescriptorType bindingType = reflectionBinding.descriptor_type;

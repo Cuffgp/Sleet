@@ -47,8 +47,10 @@ namespace Sleet {
 	void VulkanBuffer::Map()
 	{
 		auto device = VulkanDevice::Get().Device();
-
-		vkMapMemory(device, m_Memory, 0, m_Size, 0, &m_Mapped);
+		if (!m_Mapped)
+		{
+			vkMapMemory(device, m_Memory, 0, m_Size, 0, &m_Mapped);
+		}
 	}
 
 	void VulkanBuffer::Unmap()

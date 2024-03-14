@@ -5,9 +5,20 @@
 #include "Sleet/Renderer/Renderer.h"
 #include "Sleet/Renderer/Camera.h"
 
+#include "Sleet/Renderer/GltfLoader.h"
+
 namespace Sleet {
 	
 	Application* Application::s_Instance = nullptr;
+
+	struct SceneUBO
+	{
+		glm::mat4 View;
+		glm::mat4 Projection;
+		glm::vec4 AmbientLight;
+		glm::vec4 LightPosition;
+		glm::vec4 LightColour;
+	};
 
 	Application::Application()
 	{
@@ -28,7 +39,7 @@ namespace Sleet {
 			-0.5f, -0.5f, -0.5f,
 			 0.5f, -0.5f, -0.5f,
 			 0.5f,  0.5f, -0.5f,
-			-0.5f,  0.5f, -0.5f,
+			-0.5f,  0.5f, -0.5f
 		};
 
 		uint32_t CubeIndices[] = {
@@ -40,36 +51,41 @@ namespace Sleet {
 			4, 5, 1,  1, 0, 4
 		};
 
-		float FaceColors[] = {
-			1.f, 0.f, 0.f, 1.f,
-			0.f, 1.f, 0.f, 1.f,
-			0.f, 0.f, 1.f, 1.f,
-			1.f, 0.f, 1.f, 1.f,
-			0.f, 1.f, 1.f, 1.f,
-			1.f, 1.f, 0.f, 1.f,
-		};
+		m_CubeVertex = VertexBuffer::Create(CubeVertices, 3 * 8 * sizeof(float));
+		m_CubeIndex = IndexBuffer::Create(CubeIndices, 6 * 6 * sizeof(uint32_t));
+
+		GltfLoader mesh = GltfLoader("assets/gltf/cube/cube.gltf");
+
+		m_VertexBuffer = mesh.GetVertexBuffer();
+		m_IndexBuffer = mesh.GetIndexBuffer();
+
+		m_Texture = Texture::Create("assets/gltf/cube/Cube_BaseColor.png");
 
 		auto vertexInput = VertexInput({
-		{ "Pos",   ShaderDataType::Float3, 0 }
+		{ "Pos",      ShaderDataType::Float3, 0 },
+		{ "Normal",   ShaderDataType::Float3, 0 },
+		{ "Uv",       ShaderDataType::Float2, 0 }
 			});
 
-		DescriptorMap descriptorMap;
-		descriptorMap[0] = ShaderDescriptor(0, 0, ShaderStage::Fragment, ShaderDescriptorType::Uniform, 1);
+		DescriptorMap sceneMap;
+		sceneMap[0] = ShaderDescriptor(0, 0, ShaderStage::All, ShaderDescriptorType::Uniform, 1);
 
-		m_ConstantSet = DescriptorSet::Create(descriptorMap);
+		for (int i = 0; i < Renderer::FramesInFlight(); i++)
+		{
+			m_SceneDescriptorSet.push_back(DescriptorSet::Create(sceneMap));
+			m_SceneUniform.push_back(UniformBuffer::Create(sizeof(SceneUBO)));
 
-		DescriptorSetMap descriptorSetMap;
-		descriptorSetMap[0] = descriptorMap;
+			m_SceneUniform[i]->Write(m_SceneDescriptorSet[i], 0);
+		}
 
-		m_VertexBuffer = VertexBuffer::Create(CubeVertices, 8 * 3 * sizeof(float), vertexInput);
-		m_IndexBuffer = IndexBuffer::Create(CubeIndices, 6 * 6 * sizeof(uint32_t));
+		DescriptorMap constantMap;
+		constantMap[0] = ShaderDescriptor(1, 0, ShaderStage::Fragment, ShaderDescriptorType::ImageSampler, 1);
 
-		m_UniformBuffer = UniformBuffer::Create(6 * 4 * sizeof(float));
-		m_UniformBuffer->SetData(FaceColors);
+		m_ConstantSet = DescriptorSet::Create(constantMap);
+		m_Texture->Write(m_ConstantSet, 0);
 
-		m_UniformBuffer->Write(m_ConstantSet);
-
-		m_Pipeline = Pipeline::Create("assets/shaders/uniform_shader");
+		m_MeshPipeline = Pipeline::Create("assets/shaders/mesh_shader");
+		m_SimplePipeline = Pipeline::Create("assets/shaders/transform_shader");
 
 		SL_INFO("Index Count {}", m_IndexBuffer->GetIndexCount());
 
@@ -83,9 +99,9 @@ namespace Sleet {
 
 	void Application::Run()
 	{
-		std::array<glm::mat4, 2> viewProjection;
+		SceneUBO sceneUBO;
 
-		Camera camera;
+		Camera camera(glm::vec3{ 0., 0., -9. }, glm::vec3{ 0., 0., 1. });
 
 		while (!m_Window->ShouldClose())
 		{
@@ -95,25 +111,43 @@ namespace Sleet {
 
 			camera.OnUpdate(timestep);
 
-			viewProjection[0] = camera.GetView();
-			viewProjection[1] = camera.GetProjection();
+			sceneUBO.View = camera.GetView();
+			sceneUBO.Projection = camera.GetProjection();
 
-			glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3{ 1, 0, 0 });
-			glm::mat4 translation2 = glm::translate(glm::mat4(1.0f), glm::vec3{ -1, 0, 0 });
+			//float intensity = std::sin(time)*std::sin(time);
+			float intensity = 0.0f;
+
+			sceneUBO.AmbientLight = glm::vec4(intensity, intensity, intensity, 1.0);
+			sceneUBO.LightPosition = glm::vec4(0., -4., 0., 0.);
+			sceneUBO.LightColour = glm::vec4(0., 1., 0., 0.);
+
+			m_SceneUniform[Renderer::CurrentFrameIndex()]->SetData(&sceneUBO);
+
+			glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3{ 2, 0, 0 });
+			glm::mat4 translation2 = glm::translate(glm::mat4(1.0f), glm::vec3{ -2, 0, 0 });
 			glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), time, glm::vec3(1, 1, 1));
 			glm::mat4 rotation2 = glm::rotate(glm::mat4(1.0f), time, glm::vec3(-0.8, -0.5, 1));
 
+			glm::mat4 cubeTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(sceneUBO.LightPosition));
+
 			m_Window->PollEvents();
 
-			Renderer::BeginFrame(m_Pipeline);
+			Renderer::BeginFrame(m_SimplePipeline);
+			Renderer::BindVertexBuffer(m_CubeVertex);
+			Renderer::BindIndexBuffer(m_CubeIndex);
+			Renderer::SetTransform(sceneUBO.Projection * sceneUBO.View * cubeTranslation);
+			Renderer::DrawIndexed(m_CubeIndex->GetIndexCount());
+
+			Renderer::BindPipeline(m_MeshPipeline);
 			Renderer::BindVertexBuffer(m_VertexBuffer);
 			Renderer::BindIndexBuffer(m_IndexBuffer);
 
-			Renderer::BindDescriptorSet(m_ConstantSet);
+			Renderer::BindDescriptorSet(m_SceneDescriptorSet[Renderer::CurrentFrameIndex()], 0);
+			Renderer::BindDescriptorSet(m_ConstantSet, 1);
 
-			Renderer::SetTransform(camera.GetProjectionView() * translation * rotation);
+			Renderer::SetTransform(translation * rotation);
 			Renderer::DrawIndexed(m_IndexBuffer->GetIndexCount());
-			Renderer::SetTransform(camera.GetProjectionView() * translation2 * rotation2);
+			Renderer::SetTransform(translation2 * rotation2);
 			Renderer::DrawIndexed(m_IndexBuffer->GetIndexCount());
 			Renderer::EndFrame();
 		}

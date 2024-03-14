@@ -15,7 +15,7 @@ namespace Sleet {
 
 		virtual void SetData(void* data) override;
 
-		virtual void Write(Ref<DescriptorSet> descriptorSet) override;
+		virtual void Write(Ref<DescriptorSet> descriptorSet, uint32_t binding) override;
 
 		void WriteToSet(VkDescriptorSet set, uint32_t binding);
 	private:

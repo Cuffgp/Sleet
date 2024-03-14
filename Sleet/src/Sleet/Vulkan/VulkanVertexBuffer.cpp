@@ -4,8 +4,8 @@
 
 namespace Sleet {
 
-	VulkanVertexBuffer::VulkanVertexBuffer(void* data, uint32_t size, VertexInput input) :
-		m_Size(size), m_Input(input)
+	VulkanVertexBuffer::VulkanVertexBuffer(void* data, uint32_t size) :
+		m_Size(size)
 	{
 		m_Buffer = CreateScope<VulkanBuffer>(
 			m_Size,
@@ -35,14 +35,5 @@ namespace Sleet {
 		VulkanDevice::Get().CopyBuffer(stagingBuffer.GetBuffer(), m_Buffer->GetBuffer(), m_Size);
 
 	}
-
-	/*
-	void VulkanVertexBuffer::Bind(VkCommandBuffer commandBuffer)
-	{
-		VkBuffer vertexBuffers[] = { m_Buffer->GetBuffer() };
-		VkDeviceSize offsets[] = { 0 };
-		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-	}
-	*/
 
 }

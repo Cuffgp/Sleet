@@ -1,21 +1,19 @@
 #pragma once
 
+#include "Sleet/Core/Base.h"
+
 #include "Sleet/Renderer/DescriptorSet.h"
 
 namespace Sleet {
 
-	class UniformBuffer
+	class Texture
 	{
 	public:
-
-		virtual ~UniformBuffer() = default;
-
-		static Ref<UniformBuffer> Create(uint32_t size);
-
-		virtual void SetData(void* data) = 0;
+		~Texture() = default;
 
 		virtual void Write(Ref<DescriptorSet> descriptorSet, uint32_t binding) = 0;
 
+		static Ref<Texture> Create(const std::string filepath);
 	private:
 
 	};

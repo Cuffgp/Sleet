@@ -26,7 +26,7 @@ namespace Sleet {
 		virtual void BindPipeline(Ref<Pipeline> pipeline) = 0;
 		virtual void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer) = 0;
 		virtual void BindIndexBuffer(Ref<IndexBuffer> indexBuffer) = 0;
-		virtual void BindDescriptorSet(Ref<DescriptorSet> descriptorSet) = 0;
+		virtual void BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet) = 0;
 
 		virtual void DrawIndexed(uint32_t indexCount) = 0;
 

@@ -55,9 +55,9 @@ namespace Sleet {
 		s_Renderer->BindIndexBuffer(indexBuffer);
 	}
 
-	void Renderer::BindDescriptorSet(Ref<DescriptorSet> descriptorSet)
+	void Renderer::BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet)
 	{
-		s_Renderer->BindDescriptorSet(descriptorSet);
+		s_Renderer->BindDescriptorSet(descriptorSet, firstSet);
 	}
 
 	void Renderer::DrawIndexed(uint32_t indexCount)
@@ -68,6 +68,16 @@ namespace Sleet {
 	void Renderer::SetTransform(glm::mat4 transform)
 	{
 		s_Renderer->SetTransform(transform);
+	}
+
+	uint32_t Renderer::FramesInFlight()
+	{
+		return s_Renderer->FramesInFlight();
+	}
+
+	uint32_t Renderer::CurrentFrameIndex()
+	{
+		return s_Renderer->CurrentFrameIndex();
 	}
 
 }

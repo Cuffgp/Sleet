@@ -108,27 +108,29 @@ namespace Sleet {
 
 		auto commandBuffer = m_CommandBuffers[m_CurrentFrameIndex];
 
-		// Transition the swapchain image to colour attachment
-		VkImageMemoryBarrier imageMemoryBarrier{};
-		imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		imageMemoryBarrier.image = m_Swapchain->GetImage(m_CurrentImageIndex);
-		imageMemoryBarrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-
-		vkCmdPipelineBarrier(
+		VulkanDevice::Get().InsertImageMemoryBarrier(
 			commandBuffer,
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,  // srcStageMask
-			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, // dstStageMask
+			m_Swapchain->GetImage(m_CurrentImageIndex),
 			0,
+			VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+			VK_IMAGE_LAYOUT_UNDEFINED,
+			VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VkImageSubresourceRange{ VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 });
+
+		/*
+		VulkanDevice::Get().InsertImageMemoryBarrier(
+			commandBuffer,
+			m_Swapchain->GetDepthImage(m_CurrentFrameIndex),
 			0,
-			nullptr,
-			0,
-			nullptr,
-			1,
-			&imageMemoryBarrier
-		);
+			VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+			VK_IMAGE_LAYOUT_UNDEFINED,
+			VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+			VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+			VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+			VkImageSubresourceRange{ VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1 });
+		*/
 
 		VkViewport viewport{};
 		viewport.x = 0.0f;
@@ -182,27 +184,17 @@ namespace Sleet {
 		auto commandBuffer = m_CommandBuffers[m_CurrentFrameIndex];
 
 		// Transition the swapchain image for presentation
-		
-		VkImageMemoryBarrier imageMemoryBarrier{};
-		imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-		imageMemoryBarrier.image = m_Swapchain->GetImage(m_CurrentImageIndex);
-		imageMemoryBarrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
 
-		vkCmdPipelineBarrier(
+		VulkanDevice::Get().InsertImageMemoryBarrier(
 			commandBuffer,
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,  // srcStageMask
-			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, // dstStageMask
+			m_Swapchain->GetImage(m_CurrentImageIndex),
+			VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
 			0,
-			0,
-			nullptr,
-			0,
-			nullptr,
-			1,
-			&imageMemoryBarrier
-		);
+			VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+			VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+			VkImageSubresourceRange{ VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 });
 		
 
 		// Finish and submit the command buffer to the graphics queue
@@ -275,7 +267,7 @@ namespace Sleet {
 		vkCmdBindIndexBuffer(commandBuffer, std::static_pointer_cast<VulkanIndexBuffer>(indexBuffer)->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 	}
 
-	void VulkanRenderer::BindDescriptorSet(Ref<DescriptorSet> descriptorSet)
+	void VulkanRenderer::BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet)
 	{
 		auto commandBuffer = GetCurrentCommandBuffer();
 		auto set = std::static_pointer_cast<VulkanDescriptorSet>(descriptorSet)->GetDescriptorSet();
@@ -284,7 +276,7 @@ namespace Sleet {
 			commandBuffer,
 			VK_PIPELINE_BIND_POINT_GRAPHICS,
 			m_LatestLayout,
-			0,
+			firstSet,
 			1,
 			&set,
 			0,

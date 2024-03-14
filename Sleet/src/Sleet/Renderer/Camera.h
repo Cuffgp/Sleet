@@ -6,6 +6,7 @@ namespace Sleet {
 	{
 	public:
 		Camera();
+		Camera(glm::vec3 position, glm::vec3 direction);
 		~Camera();
 
 		glm::mat4 GetProjectionView() { return m_Projection * m_View; }

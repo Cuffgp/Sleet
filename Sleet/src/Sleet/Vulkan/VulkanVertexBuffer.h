@@ -10,7 +10,7 @@ namespace Sleet {
 	class VulkanVertexBuffer : public VertexBuffer
 	{
 	public:
-		VulkanVertexBuffer(void* data, uint32_t size, VertexInput input);
+		VulkanVertexBuffer(void* data, uint32_t size);
 		~VulkanVertexBuffer();
 
 		virtual const VertexInput& GetInput() const override { return m_Input; }

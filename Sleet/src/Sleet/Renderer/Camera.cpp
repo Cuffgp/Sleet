@@ -6,11 +6,11 @@
 
 namespace Sleet {
 
-	Camera::Camera()
+	Camera::Camera(glm::vec3 position, glm::vec3 direction)
 	{
 		m_LastMousePosition = glm::vec2{ 0., 0. };
-		m_Position = glm::vec3{ 0., 0., -3. };
-		m_ForwardDirection = glm::vec3{ 0., 0., 1. };
+		m_Position = position;
+		m_ForwardDirection = direction;
 
 		// Create the view matrix
 		m_View = glm::lookAt(m_Position, m_Position + m_ForwardDirection, glm::vec3{ 0., 1., 0. });
