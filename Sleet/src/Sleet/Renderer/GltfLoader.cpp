@@ -37,7 +37,6 @@ namespace Sleet {
 			SL_ERROR("Failed to parse glTF");
 		}
 
-		auto scene = model.scenes[model.defaultScene];
 		SL_INFO("Done");
 
         auto indexData = GetAttributeData(&model, model.meshes[0].primitives[0].indices);

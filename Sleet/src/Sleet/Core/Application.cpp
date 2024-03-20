@@ -115,16 +115,17 @@ namespace Sleet {
 			sceneUBO.Projection = camera.GetProjection();
 
 			//float intensity = std::sin(time)*std::sin(time);
-			float intensity = 0.0f;
+			float intensity = 0.5f;
 
 			sceneUBO.AmbientLight = glm::vec4(intensity, intensity, intensity, 1.0);
-			sceneUBO.LightPosition = glm::vec4(0., -4., 0., 0.);
-			sceneUBO.LightColour = glm::vec4(0., 1., 0., 0.);
+			sceneUBO.LightPosition = glm::vec4(5*std::cos(time), 5 * std::sin(time), 0., 0.);
+			sceneUBO.LightColour = glm::vec4(1., 1., 1., 0.);
 
 			m_SceneUniform[Renderer::CurrentFrameIndex()]->SetData(&sceneUBO);
 
 			glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3{ 2, 0, 0 });
 			glm::mat4 translation2 = glm::translate(glm::mat4(1.0f), glm::vec3{ -2, 0, 0 });
+
 			glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), time, glm::vec3(1, 1, 1));
 			glm::mat4 rotation2 = glm::rotate(glm::mat4(1.0f), time, glm::vec3(-0.8, -0.5, 1));
 
