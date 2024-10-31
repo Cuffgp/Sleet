@@ -15,3 +15,5 @@
 
 #include "Sleet/Core/Base.h"
 #include "Sleet/Core/Log.h"
+
+#include "Sleet/Core/Utilities.h"

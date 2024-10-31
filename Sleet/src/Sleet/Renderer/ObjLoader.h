@@ -1,15 +1,12 @@
 #pragma once
 
-#include "glm/glm.hpp"
-
-#include "tiny_gltf.h"
-
+#include "Sleet/Renderer/Texture.h"
 #include "Sleet/Renderer/VertexBuffer.h"
 #include "Sleet/Renderer/IndexBuffer.h"
 
 namespace Sleet {
 
-	class GltfLoader 
+	class ObjLoader
 	{
 	public:
 		struct Vertex
@@ -17,26 +14,20 @@ namespace Sleet {
 			glm::vec3 Position;
 			glm::vec3 Normal;
 			glm::vec2 Uv;
-			glm::vec4 Tangent;
 		};
-
-
 	public:
-		GltfLoader(const std::string filepath);
-		~GltfLoader();
+		ObjLoader(const std::string filepath, const std::string matpath);
+		ObjLoader(const std::string filepath);
+		~ObjLoader();
 
 		Ref<VertexBuffer> GetVertexBuffer() { return m_VertexBuffer; }
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
-
+		Ref<Texture> GetTexture() { return m_Texture; }
 	private:
-
-		void LoadMeshes(tinygltf::Model& model);
-		void LoadImages(tinygltf::Model& model);
-
-		std::vector<uint8_t> GetAttributeData(const tinygltf::Model* model, uint32_t accessorId);
-
+		Ref<Texture> m_Texture;
 		Ref<VertexBuffer> m_VertexBuffer;
 		Ref<IndexBuffer> m_IndexBuffer;
 	};
+
 
 }

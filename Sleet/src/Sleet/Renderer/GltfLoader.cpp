@@ -39,6 +39,8 @@ namespace Sleet {
 
 		SL_INFO("Done");
 
+		LoadMeshes(model);
+
         auto indexData = GetAttributeData(&model, model.meshes[0].primitives[0].indices);
         auto vertexPosition = GetAttributeData(&model, model.meshes[0].primitives[0].attributes["POSITION"]);
         auto vertexNormal = GetAttributeData(&model, model.meshes[0].primitives[0].attributes["NORMAL"]);
@@ -92,6 +94,77 @@ namespace Sleet {
 	{
 
 	}
+
+	void GltfLoader::LoadMeshes(tinygltf::Model& model)
+	{
+		const tinygltf::Mesh& mesh = model.meshes[0];
+
+		for (int i = 0; i < mesh.primitives.size(); i++)
+		{
+			const tinygltf::Primitive& glTFPrimitive = mesh.primitives[i];
+			
+			// Vertices
+			{
+				const float* positionBuffer = nullptr;
+				const float* normalsBuffer = nullptr;
+				const float* texCoordsBuffer = nullptr;
+				const float* tangentsBuffer = nullptr;
+				size_t vertexCount = 0;
+
+				// Get buffer data for vertex normals
+				if (glTFPrimitive.attributes.find("POSITION") != glTFPrimitive.attributes.end()) 
+				{
+					const tinygltf::Accessor& accessor = model.accessors[glTFPrimitive.attributes.find("POSITION")->second];
+					const tinygltf::BufferView& view = model.bufferViews[accessor.bufferView];
+					positionBuffer = reinterpret_cast<const float*>(&(model.buffers[view.buffer].data[accessor.byteOffset + view.byteOffset]));
+					vertexCount = accessor.count;
+				}
+				// Get buffer data for vertex normals
+				if (glTFPrimitive.attributes.find("NORMAL") != glTFPrimitive.attributes.end()) 
+				{
+					const tinygltf::Accessor& accessor = model.accessors[glTFPrimitive.attributes.find("NORMAL")->second];
+					const tinygltf::BufferView& view = model.bufferViews[accessor.bufferView];
+					normalsBuffer = reinterpret_cast<const float*>(&(model.buffers[view.buffer].data[accessor.byteOffset + view.byteOffset]));
+				}
+				// Get buffer data for vertex texture coordinates
+				// glTF supports multiple sets, we only load the first one
+				if (glTFPrimitive.attributes.find("TEXCOORD_0") != glTFPrimitive.attributes.end()) 
+				{
+					const tinygltf::Accessor& accessor = model.accessors[glTFPrimitive.attributes.find("TEXCOORD_0")->second];
+					const tinygltf::BufferView& view = model.bufferViews[accessor.bufferView];
+					texCoordsBuffer = reinterpret_cast<const float*>(&(model.buffers[view.buffer].data[accessor.byteOffset + view.byteOffset]));
+				}
+				// POI: This sample uses normal mapping, so we also need to load the tangents from the glTF file
+				if (glTFPrimitive.attributes.find("TANGENT") != glTFPrimitive.attributes.end()) 
+				{
+					const tinygltf::Accessor& accessor = model.accessors[glTFPrimitive.attributes.find("TANGENT")->second];
+					const tinygltf::BufferView& view = model.bufferViews[accessor.bufferView];
+					tangentsBuffer = reinterpret_cast<const float*>(&(model.buffers[view.buffer].data[accessor.byteOffset + view.byteOffset]));
+				}
+
+				// CONSTRUCT VERTEX HERE
+			}
+
+			// Indices
+			{
+				const tinygltf::Accessor& accessor = model.accessors[glTFPrimitive.indices];
+				const tinygltf::BufferView& bufferView = model.bufferViews[accessor.bufferView];
+				const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
+
+				size_t indexCount = static_cast<uint32_t>(accessor.count);
+			}
+
+
+		}
+
+		SL_INFO("Loaded Mesh");
+	}
+
+	void GltfLoader::LoadImages(tinygltf::Model& model)
+	{
+
+	}
+
 
     std::vector<uint8_t> GltfLoader::GetAttributeData(const tinygltf::Model* model, uint32_t accessorId)
     {

@@ -6,6 +6,7 @@
 #include "Sleet/Renderer/Camera.h"
 
 #include "Sleet/Renderer/GltfLoader.h"
+#include "Sleet/Renderer/ObjLoader.h"
 
 namespace Sleet {
 	
@@ -54,12 +55,13 @@ namespace Sleet {
 		m_CubeVertex = VertexBuffer::Create(CubeVertices, 3 * 8 * sizeof(float));
 		m_CubeIndex = IndexBuffer::Create(CubeIndices, 6 * 6 * sizeof(uint32_t));
 
-		GltfLoader mesh = GltfLoader("assets/gltf/cube/cube.gltf");
+		//GltfLoader mesh = GltfLoader("assets/gltf/lantern/lantern.gltf");
+		ObjLoader mesh = ObjLoader("assets/sponza/sponza.obj");
 
 		m_VertexBuffer = mesh.GetVertexBuffer();
 		m_IndexBuffer = mesh.GetIndexBuffer();
 
-		m_Texture = Texture::Create("assets/gltf/cube/Cube_BaseColor.png");
+		m_Texture = Texture::Create("assets/gltf/lantern/Lantern_baseColor.png");
 
 		auto vertexInput = VertexInput({
 		{ "Pos",      ShaderDataType::Float3, 0 },
@@ -101,7 +103,7 @@ namespace Sleet {
 	{
 		SceneUBO sceneUBO;
 
-		Camera camera(glm::vec3{ 0., 0., -9. }, glm::vec3{ 0., 0., 1. });
+		Camera camera(glm::vec3{ 0., 0., -40. }, glm::vec3{ 0., 0., 1. });
 
 		while (!m_Window->ShouldClose())
 		{
@@ -146,10 +148,10 @@ namespace Sleet {
 			Renderer::BindDescriptorSet(m_SceneDescriptorSet[Renderer::CurrentFrameIndex()], 0);
 			Renderer::BindDescriptorSet(m_ConstantSet, 1);
 
-			Renderer::SetTransform(translation * rotation);
+			Renderer::SetTransform(translation);
 			Renderer::DrawIndexed(m_IndexBuffer->GetIndexCount());
-			Renderer::SetTransform(translation2 * rotation2);
-			Renderer::DrawIndexed(m_IndexBuffer->GetIndexCount());
+			//Renderer::SetTransform(translation2 * rotation2);
+			//Renderer::DrawIndexed(m_IndexBuffer->GetIndexCount());
 			Renderer::EndFrame();
 		}
 	}
