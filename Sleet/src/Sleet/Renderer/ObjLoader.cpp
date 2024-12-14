@@ -55,12 +55,13 @@ namespace Sleet {
 			SL_WARN("TinyObjReader: {}", reader.Warning());
 		}
 
-		auto& attrib = reader.GetAttrib();
+		auto& attributes = reader.GetAttrib();
 		auto& shapes = reader.GetShapes();
 		auto& materials = reader.GetMaterials();
 
 		SL_INFO("Loaded model");
 
+		/*
 		// Loop over shapes
 		for (size_t s = 0; s < 1; s++) 
 		{
@@ -111,6 +112,53 @@ namespace Sleet {
 				shapes[s].mesh.material_ids[f];
 			}
 		}
+		*/
+
+		for (const auto& shape : shapes)
+		{
+			auto mesh = shape.mesh;
+
+			SL_INFO("Shape {}, size {}, material {}", shape.name, mesh.indices.size(), mesh.material_ids[0]);
+
+			std::vector<Vertex> vertices;
+
+			for (int i = 0; i < mesh.num_face_vertices.size(); i+= 3)
+			{
+				Vertex vertex;
+
+				if (mesh.indices[i].vertex_index > 0)
+				{
+					vertex.Position.x = attributes.vertices[mesh.indices[i].vertex_index];
+					vertex.Position.y = attributes.vertices[mesh.indices[i + 1].vertex_index];
+					vertex.Position.z = attributes.vertices[mesh.indices[i + 2].vertex_index];
+				}
+
+				if (mesh.indices[i].normal_index > 0)
+				{
+					vertex.Normal.x = attributes.normals[mesh.indices[i].normal_index];
+					vertex.Normal.y = attributes.normals[mesh.indices[i + 1].normal_index];
+					vertex.Normal.z = attributes.normals[mesh.indices[i + 2].normal_index];
+				}
+
+				if (mesh.indices[i].texcoord_index > 0)
+				{
+					vertex.Uv.x = attributes.texcoords[mesh.indices[i].texcoord_index];
+					vertex.Uv.y = attributes.texcoords[mesh.indices[i + 1].texcoord_index];
+				}
+
+
+				vertices.push_back(vertex);
+			}
+
+		}
+
+
+		for (const auto &material : materials)
+		{
+			SL_INFO("Material {}, texture {}", material.name, material.diffuse_texname);
+		}
+
+		SL_INFO("Finished Loading obj file");
 	}
 
 	ObjLoader::~ObjLoader()

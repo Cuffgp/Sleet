@@ -11,9 +11,14 @@ namespace Sleet {
 	public:
 		struct Vertex
 		{
-			glm::vec3 Position;
-			glm::vec3 Normal;
-			glm::vec2 Uv;
+			glm::vec3 Position = { 0., 0., 0. };
+			glm::vec3 Normal = { 0., 0., 0. };
+			glm::vec2 Uv = { 0., 0.};
+		};
+
+		struct Material
+		{
+
 		};
 	public:
 		ObjLoader(const std::string filepath, const std::string matpath);

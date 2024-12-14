@@ -1,5 +1,7 @@
 workspace "Sleet"
 	architecture "x64"
+	--toolset "msc"
+	toolset "clang"
 	startproject "Sandbox"
 
 	configurations 
@@ -45,7 +47,7 @@ project "Sleet"
 	location "Sleet"
 	kind "StaticLib"
 	language "C++"
-	cppdialect "C++17"
+	cppdialect "C++23"
 	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -105,7 +107,7 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
-	cppdialect "C++17"
+	cppdialect "C++23"
 	staticruntime "off"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
