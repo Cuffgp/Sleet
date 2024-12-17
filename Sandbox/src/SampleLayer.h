@@ -2,6 +2,8 @@
 
 #include "Sleet.h"
 
+using namespace Sleet;
+
 struct SceneUBO
 {
 	glm::mat4 View;
@@ -11,11 +13,11 @@ struct SceneUBO
 	glm::vec4 LightColour;
 };
 
-class ExampleLayer : public Sleet::Layer
+class SampleLayer : public Layer
 {
 public:
-	ExampleLayer();
-	virtual ~ExampleLayer() = default;
+	SampleLayer();
+	virtual ~SampleLayer() = default;
 
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
@@ -23,23 +25,20 @@ public:
 	void OnUpdate(float ts) override;
 	virtual void OnImGuiRender() override;
 private:
+	Ref<ObjLoader> m_CubeMesh;
+	Ref<ObjLoader> m_SpotMesh;
+	Ref<Texture> m_WoodTex;
+	Ref<Texture> m_SpotTex;
+	Ref<Pipeline> m_MeshPipeline;
 
-	// Extra to be moved to sandbox
-	Sleet::Ref<Sleet::Pipeline> m_SimplePipeline;
-	Sleet::Ref<Sleet::VertexBuffer> m_CubeVertex;
-	Sleet::Ref<Sleet::IndexBuffer> m_CubeIndex;
-	Sleet::Ref<Sleet::Pipeline> m_MeshPipeline;
-	Sleet::Ref<Sleet::VertexBuffer> m_VertexBuffer;
-	Sleet::Ref<Sleet::IndexBuffer> m_IndexBuffer;
-	Sleet::Ref<Sleet::UniformBuffer> m_UniformBuffer;
-	Sleet::Ref<Sleet::DescriptorSet> m_ConstantSet;
+	std::vector<Ref<DescriptorSet>> m_SceneSets;
+	std::vector<Ref<UniformBuffer>> m_SceneUniforms;
 
-	std::vector<Sleet::Ref<Sleet::DescriptorSet>> m_SceneDescriptorSet;
-	std::vector<Sleet::Ref<Sleet::UniformBuffer>> m_SceneUniform;
-
-	Sleet::Ref<Sleet::Texture> m_Texture;
+	Ref<DescriptorSet> m_ModelSet1;
+	Ref<DescriptorSet> m_ModelSet2;
 
 	SceneUBO m_SceneUBO;
-	Sleet::Camera m_Camera = Sleet::Camera(glm::vec3{ 0., 0., -40. }, glm::vec3{ 0., 0., 1. });;
-	float time;
+	Sleet::Camera m_Camera = Sleet::Camera(glm::vec3{ 0., 0., -40. }, glm::vec3{ 0., 0., 1. });
+
+	float time = 0.0f;
 };

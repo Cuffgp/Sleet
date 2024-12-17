@@ -21,7 +21,6 @@ namespace Sleet {
 
 		};
 	public:
-		ObjLoader(const std::string filepath, const std::string matpath);
 		ObjLoader(const std::string filepath);
 		~ObjLoader();
 
