@@ -17,7 +17,7 @@ namespace Sleet {
 
 		virtual void BeginFrame() = 0;
 		virtual void EndFrame() = 0;
-		virtual void BeginSwapchainRendering(Ref<Pipeline> pipeline) = 0;
+		virtual void BeginSwapchainRendering() = 0;
 		virtual void EndSwapchainRendering() = 0;
 
 		virtual void WaitIdle() = 0;
@@ -27,6 +27,7 @@ namespace Sleet {
 		virtual void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer) = 0;
 		virtual void BindIndexBuffer(Ref<IndexBuffer> indexBuffer) = 0;
 		virtual void BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet) = 0;
+		virtual void DrawImGui() = 0;
 
 		virtual void DrawIndexed(uint32_t indexCount, uint32_t firstIndex = 0) = 0;
 

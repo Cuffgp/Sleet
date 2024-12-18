@@ -75,7 +75,7 @@ void SampleLayer::OnUpdate(float ts)
 	glm::mat4 cubeScale = glm::scale(glm::mat4(1.0), glm::vec3(0.2, 0.2, 0.2));
 	glm::mat4 cubeTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(m_SceneUBO.LightPosition));
 
-	Renderer::BeginFrame(m_MeshPipeline);
+	Renderer::BindPipeline(m_MeshPipeline);
 	Renderer::BindDescriptorSet(m_SceneSets[Renderer::CurrentFrameIndex()], 0);
 
 	m_Gltf->Draw();
@@ -95,7 +95,6 @@ void SampleLayer::OnUpdate(float ts)
 	Renderer::DrawIndexed(m_SpotMesh->GetIndexBuffer()->GetIndexCount());
 	*/
 
-	Renderer::EndFrame();
 }
 
 void SampleLayer::OnImGuiRender()

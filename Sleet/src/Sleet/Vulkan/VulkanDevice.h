@@ -26,6 +26,7 @@ namespace Sleet {
 		VkPhysicalDevice PhysicalDevice() { return m_PhysicalDevice; }
 		VkDevice Device() { return m_Device; }
 		VkQueue GraphicsQueue() { return m_GraphicsQueue; }
+		uint32_t GraphicsFamily() { return m_QueueFamilyIndices.Graphics; }
 		VkCommandPool CommandPool() { return m_CommandPool; }
 		VkDescriptorPool DescriptorPool() { return m_DescriptorPool; }
 		VkPhysicalDeviceProperties PhysicalDeviceProperties() { return m_PhysicalDeviceProperties; }

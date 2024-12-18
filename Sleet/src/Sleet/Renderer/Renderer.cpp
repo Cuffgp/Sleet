@@ -17,11 +17,10 @@ namespace Sleet {
 		delete s_Renderer;
 	}
 
-	void Renderer::BeginFrame(Ref<Pipeline> pipeline)
+	void Renderer::BeginFrame()
 	{
 		s_Renderer->BeginFrame();
-		s_Renderer->BeginSwapchainRendering(pipeline);
-		s_Renderer->BindPipeline(pipeline);
+		s_Renderer->BeginSwapchainRendering();
 	}
 
 	void Renderer::EndFrame()
@@ -58,6 +57,11 @@ namespace Sleet {
 	void Renderer::BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet)
 	{
 		s_Renderer->BindDescriptorSet(descriptorSet, firstSet);
+	}
+
+	void Renderer::DrawImGui()
+	{
+		s_Renderer->DrawImGui();
 	}
 
 	void Renderer::DrawIndexed(uint32_t indexCount, uint32_t firstIndex)

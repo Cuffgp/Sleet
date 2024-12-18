@@ -8,6 +8,8 @@
 #include "Sleet/Renderer/GltfLoader.h"
 #include "Sleet/Renderer/ObjLoader.h"
 
+#include "Sleet/ImGui/ImGuiLayer.h"
+
 
 namespace Sleet {
 	
@@ -23,6 +25,9 @@ namespace Sleet {
 		m_Window->SetResizeCallback(SL_BIND_FN(Application::OnWindowResize));
 
 		Renderer::Init();
+
+		m_ImGuiLayer = ImGuiLayer::Create();
+		PushOverlay(m_ImGuiLayer);
 
 	}
 	
@@ -53,12 +58,18 @@ namespace Sleet {
 			float timestep = time - m_LastTime;
 			m_LastTime = time;
 
+			Renderer::BeginFrame();
+			
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(timestep);
 
 			// Imgui is not yet implemented
+			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();
+			m_ImGuiLayer->End();
+
+			Renderer::EndFrame();
 
 			m_Window->PollEvents();
 		}

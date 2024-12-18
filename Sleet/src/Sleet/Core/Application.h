@@ -14,6 +14,8 @@
 #include "Sleet/Renderer/DescriptorSet.h"
 #include "Sleet/Renderer/Texture.h"
 
+#include "Sleet/ImGui/ImGuiLayer.h"
+
 namespace Sleet {
 	
 	class Application
@@ -38,6 +40,7 @@ namespace Sleet {
 		bool m_Minimized;
 		LayerStack m_LayerStack;
 
+		ImGuiLayer* m_ImGuiLayer;
 
 		static Application* s_Instance;
 	};

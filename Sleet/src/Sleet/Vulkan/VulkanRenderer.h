@@ -17,7 +17,7 @@ namespace Sleet {
 		VkCommandBuffer GetCurrentCommandBuffer() { return m_CommandBuffers[m_CurrentFrameIndex]; }
 
 		virtual void BeginFrame() override;
-		virtual void BeginSwapchainRendering(Ref<Pipeline> pipeline) override;
+		virtual void BeginSwapchainRendering() override;
 		virtual void EndSwapchainRendering() override;
 		virtual void EndFrame() override;
 
@@ -25,6 +25,7 @@ namespace Sleet {
 		virtual void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer) override;
 		virtual void BindIndexBuffer(Ref<IndexBuffer> indexBuffer) override;
 		virtual void BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet) override;
+		virtual void DrawImGui() override;
 
 		virtual void DrawIndexed(uint32_t indexCount, uint32_t firstIndex = 0) override;
 

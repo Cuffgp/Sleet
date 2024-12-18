@@ -11,7 +11,7 @@ namespace Sleet {
 		static void Shutdown();
 		static inline RendererAPI& Get() { return *s_Renderer; }
 
-		static void BeginFrame(Ref<Pipeline> pipeline);
+		static void BeginFrame();
 		static void EndFrame();
 
 		static void WaitIdle();
@@ -21,6 +21,7 @@ namespace Sleet {
 		static void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer);
 		static void BindIndexBuffer(Ref<IndexBuffer> indexBuffer);
 		static void BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet);
+		static void DrawImGui();
 		static void DrawIndexed(uint32_t indexCount, uint32_t firstIndex = 0);
 
 		static void SetTransform(glm::mat4 transform);

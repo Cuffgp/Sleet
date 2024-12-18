@@ -8,6 +8,8 @@
 #include "Sleet/Vulkan/VulkanUniformBuffer.h"
 #include "Sleet/Vulkan/VulkanDescriptorSet.h"
 
+#include "Sleet/ImGui/imgui_impl_vulkan.h"
+
 namespace Sleet {
 
 	uint32_t VulkanRenderer::MaxFramesInFlight = 2;
@@ -101,11 +103,8 @@ namespace Sleet {
 
 	}
 
-	void VulkanRenderer::BeginSwapchainRendering(Ref<Pipeline> pipeline)
+	void VulkanRenderer::BeginSwapchainRendering()
 	{
-		m_LatestPipeline = std::static_pointer_cast<VulkanPipeline>(pipeline);
-		m_LatestLayout = std::static_pointer_cast<VulkanPipeline>(pipeline)->GetPipelineLayout();
-
 		auto commandBuffer = m_CommandBuffers[m_CurrentFrameIndex];
 
 		VulkanDevice::Get().InsertImageMemoryBarrier(
@@ -134,9 +133,9 @@ namespace Sleet {
 
 		VkViewport viewport{};
 		viewport.x = 0.0f;
-		viewport.y = 0.0f;
+		viewport.y = static_cast<float>(m_Swapchain->GetExtent().height);
 		viewport.width = static_cast<float>(m_Swapchain->GetExtent().width);
-		viewport.height = static_cast<float>(m_Swapchain->GetExtent().height);
+		viewport.height = -static_cast<float>(m_Swapchain->GetExtent().height);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
@@ -282,6 +281,12 @@ namespace Sleet {
 			0,
 			nullptr
 		);
+	}
+
+	void VulkanRenderer::DrawImGui()
+	{
+		auto commandBuffer = GetCurrentCommandBuffer();
+		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
 	}
 
 	void VulkanRenderer::DrawIndexed(uint32_t indexCount, uint32_t firstIndex)

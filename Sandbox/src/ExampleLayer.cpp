@@ -107,7 +107,6 @@ void ExampleLayer::OnUpdate(float ts)
 	//glm::mat4 cubeTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(sceneUBO.LightPosition));
 	glm::mat4 cubeTranslation = glm::mat4(1.0f);
 
-	Sleet::Renderer::BeginFrame(m_SimplePipeline);
 	Sleet::Renderer::BindVertexBuffer(m_CubeVertex);
 	Sleet::Renderer::BindIndexBuffer(m_CubeIndex);
 	Sleet::Renderer::SetTransform(m_SceneUBO.Projection * m_SceneUBO.View * cubeTranslation);
@@ -124,7 +123,6 @@ void ExampleLayer::OnUpdate(float ts)
 	//Renderer::DrawIndexed(m_IndexBuffer->GetIndexCount());
 	//Renderer::SetTransform(translation2 * rotation2);
 	//Renderer::DrawIndexed(m_IndexBuffer->GetIndexCount());
-	Sleet::Renderer::EndFrame();
 }
 
 void ExampleLayer::OnImGuiRender()
