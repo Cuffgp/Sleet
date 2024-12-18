@@ -205,7 +205,7 @@ namespace Sleet {
 					{
 						Vertex vert{};
 						vert.Position = glm::vec4(glm::make_vec3(&positionBuffer[v * 3]), 1.0f);
-						vert.Position.y *= -1;
+						//vert.Position.y *= -1;
 						vert.Normal = glm::normalize(glm::vec3(normalsBuffer ? glm::make_vec3(&normalsBuffer[v * 3]) : glm::vec3(0.0f)));
 						vert.Uv = texCoordsBuffer ? glm::make_vec2(&texCoordsBuffer[v * 2]) : glm::vec3(0.0f);
 						//vert.color = glm::vec3(1.0f);

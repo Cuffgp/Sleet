@@ -25,6 +25,7 @@ IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 
 LibraryDir = {}
 LibraryDir["GLFW"] = "vendor/glfw"
+LibraryDir["imgui"] = "vendor/imgui"
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
 
 Library = {}
@@ -42,6 +43,7 @@ Library["SPIRV_Cross_Reflect_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-re
 
 group "Dependencies"
 	include "Sleet/vendor/glfw"
+	include "Sleet/vendor/imgui"
 
 project "Sleet"
 	location "Sleet"
@@ -70,12 +72,14 @@ project "Sleet"
 		"%{prj.name}/vendor",
 		"%{prj.name}/vendor/tiny_gltf/",
 		"%{prj.name}/vendor/glfw/include",
+		"%{prj.name}/vendor/imgui",
 		"%{IncludeDir.VulkanSDK}"
 	}
 	
 	links
 	{
-        "GLFW",
+		"GLFW",
+		"imgui",
 		"%{Library.Vulkan}",
 	}
 	

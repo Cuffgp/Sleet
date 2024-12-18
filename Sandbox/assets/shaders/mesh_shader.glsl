@@ -25,6 +25,7 @@ layout( push_constant ) uniform constants
 void main() 
 {
 	gl_Position = Scene.Projection * Scene.View * PushConstants.Transform * vec4(inPosition, 1.0f);
+
 	fragPosition = vec3(PushConstants.Transform * vec4(inPosition, 1.0));
 
 	fragTexCoord = inUv;

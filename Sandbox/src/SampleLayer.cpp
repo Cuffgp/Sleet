@@ -6,7 +6,8 @@ SampleLayer::SampleLayer()
 	m_SpotMesh = CreateRef<ObjLoader>("assets/mesh/spot_control_mesh.obj");
 
 	//m_Gltf = CreateRef<GltfLoader>("assets/gltf/Cube/Cube.gltf");
-	m_Gltf = CreateRef<GltfLoader>("assets/gltf/AntiqueCamera/AntiqueCamera.gltf");
+	//m_Gltf = CreateRef<GltfLoader>("assets/gltf/AntiqueCamera/AntiqueCamera.gltf");
+	m_Gltf = CreateRef<GltfLoader>("assets/gltf/sponza/sponza.gltf");
 
 	m_WoodTex = Texture::Create("assets/texture/WoodFloor.png");
 	m_SpotTex = Texture::Create("assets/texture/spot_texture.png");
@@ -67,27 +68,26 @@ void SampleLayer::OnUpdate(float ts)
 
 	m_SceneUniforms[Renderer::CurrentFrameIndex()]->SetData(&m_SceneUBO);
 
-	glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3{ 2, 0, 0 });
-	glm::mat4 translation2 = glm::translate(glm::mat4(1.0f), glm::vec3{ -2, 0, 0 });
 
 	glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), time, glm::vec3(0, 1, 0));
-	glm::mat4 rotation2 = glm::rotate(glm::mat4(1.0f), time, glm::vec3(-0.8, -0.5, 1));
-
-	glm::mat4 cubeTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(m_SceneUBO.LightPosition));
 	glm::mat4 spotTranslation = rotation*glm::mat4(1.0f);
+
+	glm::mat4 cubeScale = glm::scale(glm::mat4(1.0), glm::vec3(0.2, 0.2, 0.2));
+	glm::mat4 cubeTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(m_SceneUBO.LightPosition));
 
 	Renderer::BeginFrame(m_MeshPipeline);
 	Renderer::BindDescriptorSet(m_SceneSets[Renderer::CurrentFrameIndex()], 0);
 
 	m_Gltf->Draw();
 	// Cube 1
-	/*
+	
 	Renderer::BindVertexBuffer(m_CubeMesh->GetVertexBuffer());
 	Renderer::BindIndexBuffer(m_CubeMesh->GetIndexBuffer());
 	Renderer::BindDescriptorSet(m_ModelSet1, 1);
-	Renderer::SetTransform(cubeTranslation);
+	Renderer::SetTransform(cubeScale*cubeTranslation);
 	Renderer::DrawIndexed(m_CubeMesh->GetIndexBuffer()->GetIndexCount());
 
+	/*
 	Renderer::BindVertexBuffer(m_SpotMesh->GetVertexBuffer());
 	Renderer::BindIndexBuffer(m_SpotMesh->GetIndexBuffer());
 	Renderer::BindDescriptorSet(m_ModelSet2, 1);

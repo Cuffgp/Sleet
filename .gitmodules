@@ -1,3 +1,7 @@
 [submodule "Sleet/vendor/glfw"]
 	path = Sleet/vendor/glfw
 	url = https://github.com/TheCherno/glfw
+[submodule "Sleet/vendor/imgui"]
+	path = Sleet/vendor/imgui
+	url = https://github.com/Cuffgp/imgui
+	branch = docking
