@@ -5,6 +5,9 @@ SampleLayer::SampleLayer()
 	m_CubeMesh = CreateRef<ObjLoader>("assets/mesh/cube.obj");
 	m_SpotMesh = CreateRef<ObjLoader>("assets/mesh/spot_control_mesh.obj");
 
+	//m_Gltf = CreateRef<GltfLoader>("assets/gltf/Cube/Cube.gltf");
+	m_Gltf = CreateRef<GltfLoader>("assets/gltf/AntiqueCamera/AntiqueCamera.gltf");
+
 	m_WoodTex = Texture::Create("assets/texture/WoodFloor.png");
 	m_SpotTex = Texture::Create("assets/texture/spot_texture.png");
 
@@ -76,7 +79,9 @@ void SampleLayer::OnUpdate(float ts)
 	Renderer::BeginFrame(m_MeshPipeline);
 	Renderer::BindDescriptorSet(m_SceneSets[Renderer::CurrentFrameIndex()], 0);
 
+	m_Gltf->Draw();
 	// Cube 1
+	/*
 	Renderer::BindVertexBuffer(m_CubeMesh->GetVertexBuffer());
 	Renderer::BindIndexBuffer(m_CubeMesh->GetIndexBuffer());
 	Renderer::BindDescriptorSet(m_ModelSet1, 1);
@@ -88,6 +93,7 @@ void SampleLayer::OnUpdate(float ts)
 	Renderer::BindDescriptorSet(m_ModelSet2, 1);
 	Renderer::SetTransform(spotTranslation);
 	Renderer::DrawIndexed(m_SpotMesh->GetIndexBuffer()->GetIndexCount());
+	*/
 
 	Renderer::EndFrame();
 }

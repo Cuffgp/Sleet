@@ -27,6 +27,9 @@ public:
 private:
 	Ref<ObjLoader> m_CubeMesh;
 	Ref<ObjLoader> m_SpotMesh;
+
+	Ref<GltfLoader> m_Gltf;
+
 	Ref<Texture> m_WoodTex;
 	Ref<Texture> m_SpotTex;
 	Ref<Pipeline> m_MeshPipeline;

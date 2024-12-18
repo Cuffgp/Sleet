@@ -28,7 +28,7 @@ namespace Sleet {
 		virtual void BindIndexBuffer(Ref<IndexBuffer> indexBuffer) = 0;
 		virtual void BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet) = 0;
 
-		virtual void DrawIndexed(uint32_t indexCount) = 0;
+		virtual void DrawIndexed(uint32_t indexCount, uint32_t firstIndex = 0) = 0;
 
 		virtual void SetTransform(glm::mat4 transform) = 0;
 

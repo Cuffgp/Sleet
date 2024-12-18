@@ -26,7 +26,7 @@ namespace Sleet {
 		virtual void BindIndexBuffer(Ref<IndexBuffer> indexBuffer) override;
 		virtual void BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet) override;
 
-		virtual void DrawIndexed(uint32_t indexCount) override;
+		virtual void DrawIndexed(uint32_t indexCount, uint32_t firstIndex = 0) override;
 
 		virtual void SetTransform(glm::mat4 transform) override;
 

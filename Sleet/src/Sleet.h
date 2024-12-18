@@ -6,7 +6,7 @@
 #include "Sleet/Renderer/RendererAPI.h"
 
 #include "Sleet/Renderer/ObjLoader.h"
-//#include "Sleet/Renderer/GltfLoader.h"
+#include "Sleet/Renderer/GltfLoader.h"
 
 #include "Sleet/Renderer/Pipeline.h"
 #include "Sleet/Renderer/VertexBuffer.h"

@@ -60,9 +60,9 @@ namespace Sleet {
 		s_Renderer->BindDescriptorSet(descriptorSet, firstSet);
 	}
 
-	void Renderer::DrawIndexed(uint32_t indexCount)
+	void Renderer::DrawIndexed(uint32_t indexCount, uint32_t firstIndex)
 	{
-		s_Renderer->DrawIndexed(indexCount);
+		s_Renderer->DrawIndexed(indexCount, firstIndex);
 	}
 
 	void Renderer::SetTransform(glm::mat4 transform)

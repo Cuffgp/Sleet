@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <filesystem>
 
 #define SL_ENABLE_ASSERTS
 

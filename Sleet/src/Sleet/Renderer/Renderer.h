@@ -21,7 +21,7 @@ namespace Sleet {
 		static void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer);
 		static void BindIndexBuffer(Ref<IndexBuffer> indexBuffer);
 		static void BindDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t firstSet);
-		static void DrawIndexed(uint32_t indexCount);
+		static void DrawIndexed(uint32_t indexCount, uint32_t firstIndex = 0);
 
 		static void SetTransform(glm::mat4 transform);
 

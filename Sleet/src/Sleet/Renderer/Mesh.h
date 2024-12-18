@@ -15,13 +15,13 @@ namespace Sleet {
 		Mesh();
 		~Mesh();
 
-
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
 		Ref<Texture> m_Texture = nullptr;
+		Ref<DescriptorSet> m_Set = nullptr;
+
 		glm::mat4 transform = glm::mat4(1.0f);
-		Ref<DescriptorSet> m_Set;
 	};
 
 }

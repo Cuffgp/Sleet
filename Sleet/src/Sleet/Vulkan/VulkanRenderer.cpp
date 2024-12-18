@@ -284,10 +284,10 @@ namespace Sleet {
 		);
 	}
 
-	void VulkanRenderer::DrawIndexed(uint32_t indexCount)
+	void VulkanRenderer::DrawIndexed(uint32_t indexCount, uint32_t firstIndex)
 	{
 		auto commandBuffer = GetCurrentCommandBuffer();
-		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+		vkCmdDrawIndexed(commandBuffer, indexCount, 1, firstIndex, 0, 0);
 	}
 
 	void VulkanRenderer::SetTransform(glm::mat4 transform)
