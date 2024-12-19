@@ -10,6 +10,8 @@
 #include "Sleet/ImGui/imgui_impl_glfw.h"
 #include "Sleet/ImGui/imgui_impl_vulkan.h"
 
+#include "implot/implot.h"
+
 namespace Sleet {
 
 	VulkanImGuiLayer::VulkanImGuiLayer()
@@ -22,6 +24,8 @@ namespace Sleet {
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
+		ImPlot::CreateContext();
+
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -64,12 +68,16 @@ namespace Sleet {
 
 	void VulkanImGuiLayer::OnDetach()
 	{
+		ImGui_ImplVulkan_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
 
+		ImPlot::DestroyContext();
+		ImGui::DestroyContext();
 	}
 
 	void VulkanImGuiLayer::OnImGuiRender()
 	{
-		ImGui::ShowDemoWindow();
+		ImPlot::ShowDemoWindow();
 	}
 
 	void VulkanImGuiLayer::Begin()

@@ -1,3 +1,5 @@
+#include "imgui/imgui.h"
+
 #include "SampleLayer.h"
 
 SampleLayer::SampleLayer()
@@ -99,5 +101,5 @@ void SampleLayer::OnUpdate(float ts)
 
 void SampleLayer::OnImGuiRender()
 {
-
+	ImGui::ShowDemoWindow();
 }
