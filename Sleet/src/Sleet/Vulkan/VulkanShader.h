@@ -10,7 +10,7 @@ namespace Sleet {
 	class VulkanShader
 	{
 	public:
-		VulkanShader(const std::string& filepath);
+		VulkanShader(const std::string& filepath, bool forceRecompile = false);
 		VulkanShader(const std::string& vertPath, const std::string& fragPath);
 		~VulkanShader();
 
@@ -24,7 +24,7 @@ namespace Sleet {
 
 		std::string ReadFile( const std::string& filepath);
 		std::unordered_map<ShaderStage, std::string> PreProcess(const std::string& source);
-		void CompileOrGetSPIRV();
+		void CompileOrGetSPIRV(bool forceRecompile);
 
 		VkShaderModule CreateShaderModule(const std::vector<uint32_t>& code);
 

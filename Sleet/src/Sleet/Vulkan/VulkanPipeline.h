@@ -20,12 +20,16 @@ namespace Sleet {
 		VkPipeline GetPipeline() { return m_Pipeline; }
 		VkPipelineLayout GetPipelineLayout() { return m_PipelineLayout; }
 
+		void Recreate() override;
+
 	private:
 		void CreateDescriptorSetLayout(DescriptorSetMap descriptorSetMap);
 		void CreatePipelineLayout();
 		void CreatePipeline();
 
 	private:
+		std::string m_Filepath;
+
 		VkPipeline m_Pipeline;
 		VkPipelineLayout m_PipelineLayout;
 

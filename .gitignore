@@ -15,4 +15,6 @@ bin-int/
 **.vcxproj.filters
 **.vcxproj.user
 
+imgui.ini
+
 Sandbox/assets/sponza

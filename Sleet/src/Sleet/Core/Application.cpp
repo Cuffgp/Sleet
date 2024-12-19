@@ -59,11 +59,10 @@ namespace Sleet {
 			m_LastTime = time;
 
 			Renderer::BeginFrame();
-			
+
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(timestep);
 
-			// Imgui is not yet implemented
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();

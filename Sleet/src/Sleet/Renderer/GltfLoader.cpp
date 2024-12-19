@@ -77,7 +77,7 @@ namespace Sleet {
 		for (size_t i = 0; i < input.images.size(); i++)
 		{
 			auto inputImage = input.images[i];
-			SL_INFO("Loading Image {}", inputImage.name);
+			SL_INFO("Loading Image {}, bits {}", inputImage.uri, inputImage.bits);
 			
 			m_Images[i].Texture = Sleet::Texture::Create(m_ParentPath + "/" + inputImage.uri);
 			m_Images[i].DescriptorSet = DescriptorSet::Create(constantMap);

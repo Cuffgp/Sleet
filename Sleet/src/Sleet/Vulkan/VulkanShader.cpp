@@ -79,13 +79,13 @@ namespace Sleet {
 
 	}
 
-	VulkanShader::VulkanShader(const std::string& filepath)
+	VulkanShader::VulkanShader(const std::string& filepath, bool forceRecompile)
 	{
 		m_Filepath = filepath;
 
 		auto shaderCode = ReadFile(filepath+".glsl");
 		m_Code = PreProcess(shaderCode);
-		CompileOrGetSPIRV();
+		CompileOrGetSPIRV(forceRecompile);
 
 		m_VertModule = CreateShaderModule(m_SPIRV[ShaderStage::Vertex]);
 		m_FragModule = CreateShaderModule(m_SPIRV[ShaderStage::Fragment]);
@@ -105,7 +105,7 @@ namespace Sleet {
 
 		m_Code[ShaderStage::Vertex] = vertCode;
 		m_Code[ShaderStage::Fragment] = fragCode;
-		CompileOrGetSPIRV();
+		CompileOrGetSPIRV(false);
 
 		m_VertModule = CreateShaderModule(m_SPIRV[ShaderStage::Vertex]);
 		m_FragModule = CreateShaderModule(m_SPIRV[ShaderStage::Fragment]);
@@ -175,7 +175,7 @@ namespace Sleet {
 		return shaderSources;
 	}
 
-	void VulkanShader::CompileOrGetSPIRV()
+	void VulkanShader::CompileOrGetSPIRV(bool forceRecompile)
 	{
 
 		shaderc::Compiler compiler;
@@ -198,8 +198,9 @@ namespace Sleet {
 			std::filesystem::path cachedPath = cacheDirectory / (shaderFilePath.filename().string() + Utils::ShaderStageCachedFileExtension(stage));
 
 			// If the shader exists in the cache read it
+
 			std::ifstream in(cachedPath, std::ios::in | std::ios::binary);
-			if (in.is_open())
+			if (in.is_open() && (!forceRecompile))
 			{
 				in.seekg(0, std::ios::end);
 				auto size = in.tellg();
@@ -213,6 +214,7 @@ namespace Sleet {
 			// Otherwise compile and save it to the cache
 			else
 			{
+				SL_INFO("Recompiling shader to spirv");
 				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, Utils::ShaderStageToShaderc(stage), Utils::ShaderStageToString(stage).c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{

@@ -101,5 +101,13 @@ void SampleLayer::OnUpdate(float ts)
 
 void SampleLayer::OnImGuiRender()
 {
-	ImGui::ShowDemoWindow();
+	std::string pos = glm::to_string(m_Camera.GetPosition());
+	std::string dir = glm::to_string(m_Camera.GetDirection());
+
+	ImGui::Begin("Name");
+	ImGui::Text("Camera Position: %s", pos.c_str());
+	ImGui::Text("Camera Direction: %s", dir.c_str());
+	if(ImGui::Button("Recompile Shader")) { m_MeshPipeline->Recreate(); }
+	ImGui::End();
+
 }

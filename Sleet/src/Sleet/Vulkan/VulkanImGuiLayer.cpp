@@ -77,7 +77,7 @@ namespace Sleet {
 
 	void VulkanImGuiLayer::OnImGuiRender()
 	{
-		ImPlot::ShowDemoWindow();
+
 	}
 
 	void VulkanImGuiLayer::Begin()

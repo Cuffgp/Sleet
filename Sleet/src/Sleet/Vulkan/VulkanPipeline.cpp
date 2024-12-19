@@ -7,7 +7,8 @@
 
 namespace Sleet {
 
-	VulkanPipeline::VulkanPipeline(std::string filepath)
+	VulkanPipeline::VulkanPipeline(std::string filepath):
+		m_Filepath(filepath)
 	{
 		m_Shader = CreateScope<VulkanShader>(filepath);
 		m_Input = m_Shader->GetVertexInput();
@@ -18,7 +19,8 @@ namespace Sleet {
 		CreatePipeline();
 	}
 
-	VulkanPipeline::VulkanPipeline(std::string filepath, DescriptorSetMap descriptorSetMap)
+	VulkanPipeline::VulkanPipeline(std::string filepath, DescriptorSetMap descriptorSetMap):
+		m_Filepath(filepath)
 	{
 		m_Shader = CreateScope<VulkanShader>(filepath);
 		m_Input = m_Shader->GetVertexInput();
@@ -51,6 +53,19 @@ namespace Sleet {
 		}
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
+	}
+
+	void VulkanPipeline::Recreate()
+	{
+		// Should allow for hot recreation of a pipeline
+		// (but dont change the vertex input or descriptors)
+		auto device = VulkanDevice::Get().Device();
+		vkDeviceWaitIdle(device);
+		m_Shader.reset();
+		vkDestroyPipeline(device, m_Pipeline, nullptr);
+
+		m_Shader = CreateScope<VulkanShader>(m_Filepath, true);
+		CreatePipeline();
 	}
 
 	void VulkanPipeline::CreateDescriptorSetLayout(DescriptorSetMap descriptorSetMap)
@@ -215,7 +230,7 @@ namespace Sleet {
 		depthStencil.depthTestEnable = VK_TRUE;
 		depthStencil.depthWriteEnable = VK_TRUE;
 		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
-		depthStencil.depthBoundsTestEnable = VK_FALSE;
+		depthStencil.depthBoundsTestEnable = VK_TRUE;
 		depthStencil.minDepthBounds = 0.0f;  // Optional
 		depthStencil.maxDepthBounds = 1.0f;  // Optional
 		depthStencil.stencilTestEnable = VK_FALSE;

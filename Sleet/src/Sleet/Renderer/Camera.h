@@ -12,6 +12,8 @@ namespace Sleet {
 		glm::mat4 GetProjectionView() { return m_Projection * m_View; }
 		glm::mat4 GetView() { return m_View; }
 		glm::mat4 GetProjection() { return m_Projection; }
+		glm::vec3 GetPosition() { return m_Position; }
+		glm::vec3 GetDirection() { return m_ForwardDirection; }
 
 		void OnWindowResize();
 		void OnUpdate(float ts);
