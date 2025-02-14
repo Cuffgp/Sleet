@@ -2,17 +2,18 @@
 
 #include "Sleet.h"
 
-struct SceneUBO
-{
-	glm::mat4 View;
-	glm::mat4 Projection;
-	glm::vec4 AmbientLight;
-	glm::vec4 LightPosition;
-	glm::vec4 LightColour;
-};
 
 class ExampleLayer : public Sleet::Layer
 {
+public:
+	struct SceneUBO
+	{
+		glm::mat4 View;
+		glm::mat4 Projection;
+		glm::vec4 AmbientLight;
+		glm::vec4 LightPosition;
+		glm::vec4 LightColour;
+	};
 public:
 	ExampleLayer();
 	virtual ~ExampleLayer() = default;

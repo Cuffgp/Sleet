@@ -4,17 +4,17 @@
 
 using namespace Sleet;
 
-struct SceneUBO
-{
-	glm::mat4 View;
-	glm::mat4 Projection;
-	glm::vec4 AmbientLight;
-	glm::vec4 LightPosition;
-	glm::vec4 LightColour;
-};
-
 class SampleLayer : public Layer
 {
+public:
+	struct SceneUBO
+	{
+		glm::mat4 View;
+		glm::mat4 Projection;
+		glm::vec4 AmbientLight;
+		glm::vec4 LightPosition;
+		glm::vec4 LightColour;
+	};
 public:
 	SampleLayer();
 	virtual ~SampleLayer() = default;

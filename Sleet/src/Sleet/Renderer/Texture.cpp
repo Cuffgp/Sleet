@@ -10,4 +10,9 @@ namespace Sleet {
 		return CreateRef<VulkanTexture>(filepath);
 	}
 
+	Ref<Texture> Texture::Create(uint32_t width, uint32_t height, void* data)
+	{
+		return CreateRef<VulkanTexture>(width, height, data);
+	}
+
 }
