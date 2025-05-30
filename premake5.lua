@@ -125,6 +125,7 @@ project "Sandbox"
 
 	includedirs
 	{
+		"%{prj.name}/vendor",
 		"%{wks.location}/Sleet/src",
 		"%{wks.location}/Sleet/vendor",
 		"%{wks.location}/Sleet/vendor/glfw/include",
@@ -143,6 +144,9 @@ project "Sandbox"
 		
 		links
 		{
+			"C:/dev/Sleet/Sandbox/lib/debug/readosm.lib",
+			"C:/dev/Sleet/Sandbox/lib/debug/libexpatdMT.lib",
+			"C:/dev/Sleet/Sandbox/lib/debug/zlibd.lib"
 		}
 
 	filter "configurations:Release"
@@ -152,4 +156,7 @@ project "Sandbox"
 		
 		links
 		{
+			"%{prj.name}/lib/readosm.lib",
+			"%{prj.name}/lib/libexpatMT.lib",
+			"%{prj.name}/lib/zlib.lib"
 		}

@@ -34,7 +34,7 @@ namespace Sleet {
 		virtual uint32_t FramesInFlight() override { return MaxFramesInFlight; }
 		virtual uint32_t CurrentFrameIndex() override { return m_CurrentFrameIndex; }
 
-		virtual void WaitIdle() override { vkDeviceWaitIdle(VulkanDevice::Get().Device()); }
+		virtual void WaitIdle() override;
 		virtual void OnWindowResize(uint32_t width, uint32_t height) override;
 	public:
 		static uint32_t MaxFramesInFlight;

@@ -308,6 +308,11 @@ namespace Sleet {
 			&transform);
 	}
 
+	void VulkanRenderer::WaitIdle()
+	{
+		vkDeviceWaitIdle(VulkanDevice::Get().Device());
+	}
+
 	void VulkanRenderer::OnWindowResize(uint32_t width, uint32_t height)
 	{
 		m_Swapchain->RecreateSwapchain();

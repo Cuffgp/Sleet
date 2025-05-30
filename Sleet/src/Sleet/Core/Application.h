@@ -31,15 +31,21 @@ namespace Sleet {
 		static inline Application& Get() { return *s_Instance; }
 		void Run();
 
+		void SubmitToQueue(const std::function<void()>& function);
+
 	private:
 		void OnWindowResize(uint32_t width, uint32_t height);
+		void ExecuteQueue();
+
 	private:
 		Scope<Window> m_Window;
 		float m_LastTime = 0;
 		bool m_Running;
 		bool m_Minimized;
-		LayerStack m_LayerStack;
 
+		std::vector<std::function<void()>> m_StartOfFrameQueue;
+
+		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
 
 		static Application* s_Instance;

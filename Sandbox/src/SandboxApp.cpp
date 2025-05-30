@@ -2,14 +2,14 @@
 #include "Sleet/Core/EntryPoint.h"
 
 #include "ExampleLayer.h"
-#include "SampleLayer.h"
+#include "Render3DLayer.h"
 
 class SandboxApp : public Sleet::Application
 {
 public:
 	SandboxApp()
 	{
-		PushLayer(new SampleLayer());
+		PushLayer(new Render3DLayer());
 	}
 
 	~SandboxApp()

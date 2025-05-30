@@ -4,6 +4,7 @@
 #include "Sleet/Vulkan/VulkanPipeline.h"
 
 #include "Sleet/Vulkan/VulkanSwapchain.h"
+#include "Sleet/Renderer/Renderer.h"
 
 namespace Sleet {
 
@@ -59,8 +60,12 @@ namespace Sleet {
 	{
 		// Should allow for hot recreation of a pipeline
 		// (but dont change the vertex input or descriptors)
+		
 		auto device = VulkanDevice::Get().Device();
 		vkDeviceWaitIdle(device);
+
+		SL_TRACE("Recreating Pipeline");
+
 		m_Shader.reset();
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
 

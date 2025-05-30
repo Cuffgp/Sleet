@@ -54,30 +54,47 @@ namespace Sleet {
 
 		while (!m_Window->ShouldClose())
 		{
+			ExecuteQueue();
+
+			m_Window->PollEvents();
+
 			float time = (float)glfwGetTime();
 			float timestep = time - m_LastTime;
 			m_LastTime = time;
 
+			m_ImGuiLayer->Begin();
 			Renderer::BeginFrame();
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(timestep);
 
-			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
 
 			Renderer::EndFrame();
 
-			m_Window->PollEvents();
 		}
+	}
+
+	void Application::SubmitToQueue(const std::function<void()>& function)
+	{
+		m_StartOfFrameQueue.emplace_back(function);
 	}
 
 	void Application::OnWindowResize(uint32_t width, uint32_t height)
 	{
 		SL_INFO("Window resizing");
 		Renderer::OnWindowResize(width, height);
+	}
+
+	void Application::ExecuteQueue()
+	{
+
+		for (auto& func : m_StartOfFrameQueue)
+			func();
+
+		m_StartOfFrameQueue.clear();
 	}
 	
 }
