@@ -104,7 +104,7 @@ namespace Sleet {
 		VkCommandPool m_CommandPool;
 		VkDescriptorPool m_DescriptorPool;
 
-		static VulkanDevice* s_Device;
+		static inline VulkanDevice* s_Device = nullptr;
 	};
 
 

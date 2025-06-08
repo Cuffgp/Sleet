@@ -30,7 +30,7 @@ namespace Sleet {
 		static uint32_t CurrentFrameIndex();
 
 	private:
-		static RendererAPI* s_Renderer;
+		static inline RendererAPI* s_Renderer = nullptr;
 	};
 
 }

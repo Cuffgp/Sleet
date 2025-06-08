@@ -13,8 +13,6 @@
 
 namespace Sleet {
 	
-	Application* Application::s_Instance = nullptr;
-
 	Application::Application()
 	{
 		s_Instance = this;

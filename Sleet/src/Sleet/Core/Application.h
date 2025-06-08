@@ -48,7 +48,7 @@ namespace Sleet {
 		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
 
-		static Application* s_Instance;
+		static inline Application* s_Instance = nullptr;
 	};
 
 	Application* CreateApplication();

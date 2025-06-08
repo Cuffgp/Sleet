@@ -30,8 +30,8 @@ namespace Sleet {
 
 		void RecreateSwapchain();
 
-		static VkFormat s_SwapchainImageFormat;
-		static VkFormat s_SwapchainDepthFormat;
+		static inline VkFormat s_SwapchainImageFormat = VK_FORMAT_UNDEFINED;
+		static inline VkFormat s_SwapchainDepthFormat = VK_FORMAT_UNDEFINED;
 	private:
 		void CleanupSwapchain();
 		void CreateSurface();

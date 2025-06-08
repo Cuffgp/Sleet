@@ -4,8 +4,6 @@
 
 namespace Sleet {
 
-	RendererAPI* Renderer::s_Renderer = nullptr;
-
 	void Renderer::Init()
 	{
 		s_Renderer = RendererAPI::Create();

@@ -4,8 +4,6 @@
 
 namespace Sleet {
 
-	VulkanDevice* VulkanDevice::s_Device = nullptr;
-
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,

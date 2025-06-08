@@ -6,9 +6,6 @@
 
 namespace Sleet {
 
-	VkFormat VulkanSwapchain::s_SwapchainImageFormat = VK_FORMAT_UNDEFINED;
-	VkFormat VulkanSwapchain::s_SwapchainDepthFormat = VK_FORMAT_UNDEFINED;
-
 	VulkanSwapchain::VulkanSwapchain()
 	{
 		CreateSurface();
