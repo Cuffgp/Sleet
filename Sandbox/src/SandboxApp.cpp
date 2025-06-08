@@ -3,13 +3,14 @@
 
 #include "ExampleLayer.h"
 #include "Render3DLayer.h"
+#include "CitySimulationLayer.h"
 
 class SandboxApp : public Sleet::Application
 {
 public:
 	SandboxApp()
 	{
-		PushLayer(new Render3DLayer());
+		PushLayer(new CitySimulationLayer());
 	}
 
 	~SandboxApp()

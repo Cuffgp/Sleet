@@ -15,3 +15,4 @@
 #include "Sleet/Renderer/DescriptorSet.h"
 #include "Sleet/Renderer/Texture.h"
 #include "Sleet/Renderer/Camera.h"
+#include "Sleet/Renderer/OrthographicCamera.h"
