@@ -29,6 +29,7 @@ namespace Sleet {
 			{
 			case ImageFormat::RGBA8U: return VK_FORMAT_R8G8B8A8_UNORM;
 			case ImageFormat::RGBA32F: return VK_FORMAT_R32G32B32_SFLOAT;
+			case ImageFormat::R32U: return VK_FORMAT_R32_UINT;
 
 			case ImageFormat::D32FS8U: return VK_FORMAT_D32_SFLOAT_S8_UINT;
 			}

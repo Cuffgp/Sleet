@@ -12,6 +12,11 @@ namespace Sleet {
 		return CreateRef<VulkanPipeline>(filepath);
 	}
 
+	Ref<Pipeline> Create(std::string filepath, Ref<Framebuffer> framebuffer)
+	{
+		return CreateRef<VulkanPipeline>(filepath, framebuffer);
+	}
+
 	Ref<Pipeline> Pipeline::Create(std::string filepath, DescriptorSetMap descriptorSetMap)
 	{
 		return CreateRef<VulkanPipeline>(filepath, descriptorSetMap);

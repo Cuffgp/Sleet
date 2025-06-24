@@ -77,6 +77,8 @@ void Render3DLayer::OnUpdate(float ts)
 	glm::mat4 cubeScale = glm::scale(glm::mat4(1.0), glm::vec3(0.2, 0.2, 0.2));
 	glm::mat4 cubeTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(m_SceneUBO.LightPosition));
 
+	Renderer::BeginSwapchainRendering();
+
 	Renderer::BindPipeline(m_MeshPipeline);
 	Renderer::BindDescriptorSet(m_SceneSets[Renderer::CurrentFrameIndex()], 0);
 
@@ -96,6 +98,8 @@ void Render3DLayer::OnUpdate(float ts)
 	Renderer::SetTransform(spotTranslation);
 	Renderer::DrawIndexed(m_SpotMesh->GetIndexBuffer()->GetIndexCount());
 	*/
+
+	Renderer::EndSwapchainRendering();
 
 }
 

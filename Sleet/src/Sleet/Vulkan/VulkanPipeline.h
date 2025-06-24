@@ -13,6 +13,7 @@ namespace Sleet {
 	{
 	public:
 		VulkanPipeline(std::string filepath);
+		VulkanPipeline(std::string filepath, Ref<Framebuffer> framebuffer);
 		VulkanPipeline(std::string filepath, DescriptorSetMap descriptorSetMap);
 		VulkanPipeline(std::string vertPath, std::string fragPath);
 		~VulkanPipeline();
@@ -21,6 +22,8 @@ namespace Sleet {
 		VkPipelineLayout GetPipelineLayout() { return m_PipelineLayout; }
 
 		void Recreate() override;
+
+		VkPipelineRenderingCreateInfo m_PipelineRenderingInfo{};
 
 	private:
 		void CreateDescriptorSetLayout(DescriptorSetMap descriptorSetMap);
@@ -38,6 +41,7 @@ namespace Sleet {
 		DescriptorSetMap m_DescriptorSetMap;
 
 		std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;
+		
 	};
 
 }

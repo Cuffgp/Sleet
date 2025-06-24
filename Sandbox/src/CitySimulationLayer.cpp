@@ -161,6 +161,8 @@ void CitySimulationLayer::OnUpdate(float ts)
 {
 	m_Camera.OnUpdate(ts);
 
+	Sleet::Renderer::BeginSwapchainRendering();
+
 	Sleet::Renderer::BindPipeline(m_Pipeline);
 	Sleet::Renderer::SetTransform(m_Camera.GetProjectionView());
 
@@ -172,6 +174,8 @@ void CitySimulationLayer::OnUpdate(float ts)
 		Sleet::Renderer::BindIndexBuffer(m_IndexBuffers[i]);
 		Sleet::Renderer::DrawIndexed(m_IndexBuffers[i]->GetIndexCount());
 	}
+
+	Sleet::Renderer::EndSwapchainRendering();
 
 }
 

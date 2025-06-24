@@ -19,6 +19,8 @@ namespace Sleet {
 		virtual void BeginFrame() override;
 		virtual void BeginSwapchainRendering() override;
 		virtual void EndSwapchainRendering() override;
+		virtual void BeginRendering(Ref<Framebuffer> framebuffer) override;
+		virtual void EndRendering(Ref<Framebuffer> framebuffer) override;
 		virtual void EndFrame() override;
 
 		virtual void BindPipeline(Ref<Pipeline> pipeline) override;
@@ -37,7 +39,7 @@ namespace Sleet {
 		virtual void WaitIdle() override;
 		virtual void OnWindowResize(uint32_t width, uint32_t height) override;
 	public:
-		static uint32_t MaxFramesInFlight;
+		static inline uint32_t MaxFramesInFlight = 2;
 
 	private:
 		Ref<VulkanPipeline> m_LatestPipeline;

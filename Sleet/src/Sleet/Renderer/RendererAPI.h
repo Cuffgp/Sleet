@@ -7,6 +7,7 @@
 #include "Sleet/Renderer/IndexBuffer.h"
 #include "Sleet/Renderer/UniformBuffer.h"
 #include "Sleet/Renderer/DescriptorSet.h"
+#include "Sleet/Renderer/Framebuffer.h"
 
 namespace Sleet {
 
@@ -19,6 +20,8 @@ namespace Sleet {
 		virtual void EndFrame() = 0;
 		virtual void BeginSwapchainRendering() = 0;
 		virtual void EndSwapchainRendering() = 0;
+		virtual void BeginRendering(Ref<Framebuffer> framebuffer) = 0;
+		virtual void EndRendering(Ref<Framebuffer> framebuffer) = 0;
 
 		virtual void WaitIdle() = 0;
 		virtual void OnWindowResize(uint32_t width, uint32_t height) = 0;

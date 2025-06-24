@@ -11,6 +11,7 @@ namespace Sleet {
 		None = 0,
 		RGBA8U,
 		RGBA32F,
+		R32U,
 
 		D32FS8U
 	};
@@ -107,6 +108,14 @@ namespace Sleet {
 	using PushMap = std::map<uint32_t, PushBlock>;
 
 	namespace Utils {
+
+		static bool IsDepthStencil(ImageFormat image)
+		{
+			if (image == ImageFormat::D32FS8U)
+				return true;
+			else
+				return false;
+		}
 
 		static std::string ShaderDataTypeToString(ShaderDataType type)
 		{

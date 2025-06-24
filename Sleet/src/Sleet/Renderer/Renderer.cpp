@@ -18,13 +18,31 @@ namespace Sleet {
 	void Renderer::BeginFrame()
 	{
 		s_Renderer->BeginFrame();
-		s_Renderer->BeginSwapchainRendering();
 	}
 
 	void Renderer::EndFrame()
 	{
-		s_Renderer->EndSwapchainRendering();
 		s_Renderer->EndFrame();
+	}
+
+	void Renderer::BeginSwapchainRendering()
+	{
+		s_Renderer->BeginSwapchainRendering();
+	}
+
+	void Renderer::EndSwapchainRendering()
+	{
+		s_Renderer->EndSwapchainRendering();
+	}
+
+	void Renderer::BeginRendering(Ref<Framebuffer> framebuffer)
+	{
+		s_Renderer->BeginRendering(framebuffer);
+	}
+
+	void Renderer::EndRendering(Ref<Framebuffer> framebuffer)
+	{
+		s_Renderer->EndRendering(framebuffer);
 	}
 
 	void Renderer::WaitIdle()

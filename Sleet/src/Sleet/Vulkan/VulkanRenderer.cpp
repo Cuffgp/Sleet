@@ -7,12 +7,11 @@
 #include "Sleet/Vulkan/VulkanIndexBuffer.h"
 #include "Sleet/Vulkan/VulkanUniformBuffer.h"
 #include "Sleet/Vulkan/VulkanDescriptorSet.h"
+#include "Sleet/Vulkan/VulkanFramebuffer.h"
 
 #include "Sleet/ImGui/imgui_impl_vulkan.h"
 
 namespace Sleet {
-
-	uint32_t VulkanRenderer::MaxFramesInFlight = 2;
 
 	VulkanRenderer::VulkanRenderer()
 	{
@@ -175,12 +174,6 @@ namespace Sleet {
 		auto commandBuffer = m_CommandBuffers[m_CurrentFrameIndex];
 
 		vkCmdEndRenderingKHR(commandBuffer);
-	}
-
-	void VulkanRenderer::EndFrame()
-	{
-		auto device = VulkanDevice::Get().Device();
-		auto commandBuffer = m_CommandBuffers[m_CurrentFrameIndex];
 
 		// Transition the swapchain image for presentation
 
@@ -194,7 +187,94 @@ namespace Sleet {
 			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
 			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
 			VkImageSubresourceRange{ VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 });
-		
+	}
+
+	void VulkanRenderer::BeginRendering(Ref<Framebuffer> framebuffer)
+	{
+		auto fb = std::static_pointer_cast<VulkanFramebuffer>(framebuffer);
+		auto commandBuffer = m_CommandBuffers[m_CurrentFrameIndex];
+
+		VulkanDevice::Get().InsertImageMemoryBarrier(
+			commandBuffer,
+			fb->GetColourImage(0),
+			0,
+			VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+			VK_IMAGE_LAYOUT_UNDEFINED,
+			VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VkImageSubresourceRange{ VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 });
+
+		VkViewport viewport{};
+		viewport.x = 0.0f;
+		viewport.y = static_cast<float>(fb->GetHeight());
+		viewport.width = static_cast<float>(fb->GetWidth());
+		viewport.height = -static_cast<float>(fb->GetHeight());
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+		VkRect2D scissor{ {0, 0}, {fb->GetWidth(), fb->GetHeight()}};
+		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+
+		std::vector<VkRenderingAttachmentInfoKHR> colorAttachments;
+
+		for (int i = 0; i < fb->ColourAttachmentCount(); i++)
+		{
+			VkRenderingAttachmentInfoKHR colorAttachment{};
+
+			colorAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+			colorAttachment.imageView = fb->GetColourView(i);
+			colorAttachment.imageLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
+			colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			colorAttachment.clearValue.color = { 0.7f, 0.1f, 0.1f, 1.0f };
+
+			colorAttachments.push_back(colorAttachment);
+		}
+
+		VkRenderingAttachmentInfoKHR depthStencilAttachment{};
+		depthStencilAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+		depthStencilAttachment.imageView = fb->GetDepthView();
+		depthStencilAttachment.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		depthStencilAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		depthStencilAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		depthStencilAttachment.clearValue.depthStencil = { 1.0f,  0 };
+
+		VkRenderingInfoKHR renderingInfo{};
+		renderingInfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
+		renderingInfo.renderArea = { 0, 0, fb->GetWidth(), fb->GetHeight()};
+		renderingInfo.layerCount = 1;
+		renderingInfo.colorAttachmentCount = colorAttachments.size();
+		renderingInfo.pColorAttachments = colorAttachments.data();
+		renderingInfo.pDepthAttachment = &depthStencilAttachment;
+		renderingInfo.pStencilAttachment = nullptr;
+
+		vkCmdBeginRenderingKHR(commandBuffer, &renderingInfo);
+	}
+
+	void VulkanRenderer::EndRendering(Ref<Framebuffer> framebuffer)
+	{
+		auto commandBuffer = m_CommandBuffers[m_CurrentFrameIndex];
+		auto fb = std::static_pointer_cast<VulkanFramebuffer>(framebuffer);
+
+		vkCmdEndRenderingKHR(commandBuffer);
+
+		VulkanDevice::Get().InsertImageMemoryBarrier(
+			commandBuffer,
+			fb->GetColourImage(0),
+			0,
+			VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+			VK_IMAGE_LAYOUT_UNDEFINED,
+			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VkImageSubresourceRange{ VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 });
+	}
+
+	void VulkanRenderer::EndFrame()
+	{
+		auto device = VulkanDevice::Get().Device();
+		auto commandBuffer = m_CommandBuffers[m_CurrentFrameIndex];
 
 		// Finish and submit the command buffer to the graphics queue
 		if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)

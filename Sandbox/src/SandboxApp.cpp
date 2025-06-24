@@ -10,7 +10,7 @@ class SandboxApp : public Sleet::Application
 public:
 	SandboxApp()
 	{
-		PushLayer(new CitySimulationLayer());
+		PushLayer(new ExampleLayer());
 	}
 
 	~SandboxApp()

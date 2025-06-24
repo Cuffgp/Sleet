@@ -13,6 +13,10 @@ namespace Sleet {
 
 		static void BeginFrame();
 		static void EndFrame();
+		static void BeginSwapchainRendering();
+		static void EndSwapchainRendering();
+		static void BeginRendering(Ref<Framebuffer> framebuffer);
+		static void EndRendering(Ref<Framebuffer> framebuffer);
 
 		static void WaitIdle();
 		static void OnWindowResize(uint32_t width, uint32_t height);

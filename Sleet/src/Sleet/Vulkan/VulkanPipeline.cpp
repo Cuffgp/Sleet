@@ -4,6 +4,7 @@
 #include "Sleet/Vulkan/VulkanPipeline.h"
 
 #include "Sleet/Vulkan/VulkanSwapchain.h"
+#include "Sleet/Vulkan/VulkanFramebuffer.h"
 #include "Sleet/Renderer/Renderer.h"
 
 namespace Sleet {
@@ -14,6 +15,27 @@ namespace Sleet {
 		m_Shader = CreateScope<VulkanShader>(filepath);
 		m_Input = m_Shader->GetVertexInput();
 		m_DescriptorSetMap = m_Shader->GetDescriptorSetMap();
+
+		// Use the swapchain by default
+		m_PipelineRenderingInfo.colorAttachmentCount = 1;
+		m_PipelineRenderingInfo.pColorAttachmentFormats = &VulkanSwapchain::s_SwapchainImageFormat;
+		m_PipelineRenderingInfo.depthAttachmentFormat = VulkanSwapchain::s_SwapchainDepthFormat;
+		m_PipelineRenderingInfo.stencilAttachmentFormat = VK_FORMAT_UNDEFINED;
+		m_PipelineRenderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
+
+		CreateDescriptorSetLayout(m_DescriptorSetMap);
+		CreatePipelineLayout();
+		CreatePipeline();
+	}
+
+	VulkanPipeline::VulkanPipeline(std::string filepath, Ref<Framebuffer> framebuffer)
+	{
+		m_Shader = CreateScope<VulkanShader>(filepath);
+		m_Input = m_Shader->GetVertexInput();
+		m_DescriptorSetMap = m_Shader->GetDescriptorSetMap();
+
+		auto fb = std::static_pointer_cast<VulkanFramebuffer>(framebuffer);
+		m_PipelineRenderingInfo = fb->GetPipelineRenderingInfo();
 
 		CreateDescriptorSetLayout(m_DescriptorSetMap);
 		CreatePipelineLayout();
@@ -27,6 +49,13 @@ namespace Sleet {
 		m_Input = m_Shader->GetVertexInput();
 		m_DescriptorSetMap = m_Shader->GetDescriptorSetMap();
 
+		// Use the swapchain by default
+		m_PipelineRenderingInfo.colorAttachmentCount = 1;
+		m_PipelineRenderingInfo.pColorAttachmentFormats = &VulkanSwapchain::s_SwapchainImageFormat;
+		m_PipelineRenderingInfo.depthAttachmentFormat = VulkanSwapchain::s_SwapchainDepthFormat;
+		m_PipelineRenderingInfo.stencilAttachmentFormat = VK_FORMAT_UNDEFINED;
+		m_PipelineRenderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
+
 		CreateDescriptorSetLayout(m_DescriptorSetMap);
 		CreatePipelineLayout();
 		CreatePipeline();
@@ -37,6 +66,13 @@ namespace Sleet {
 		m_Shader = CreateScope<VulkanShader>(vertPath, fragPath);
 		m_Input = m_Shader->GetVertexInput();
 		m_DescriptorSetMap = m_Shader->GetDescriptorSetMap();
+
+		// Use the swapchain by default
+		m_PipelineRenderingInfo.colorAttachmentCount = 1;
+		m_PipelineRenderingInfo.pColorAttachmentFormats = &VulkanSwapchain::s_SwapchainImageFormat;
+		m_PipelineRenderingInfo.depthAttachmentFormat = VulkanSwapchain::s_SwapchainDepthFormat;
+		m_PipelineRenderingInfo.stencilAttachmentFormat = VK_FORMAT_UNDEFINED;
+		m_PipelineRenderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
 
 		CreateDescriptorSetLayout(m_DescriptorSetMap);
 		CreatePipelineLayout();
@@ -263,12 +299,13 @@ namespace Sleet {
 		colorBlending.blendConstants[2] = 0.0f; // Optional
 		colorBlending.blendConstants[3] = 0.0f; // Optional
 
-		VkPipelineRenderingCreateInfo renderingInfo{};
-		renderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
-		renderingInfo.colorAttachmentCount = 1;
-		renderingInfo.pColorAttachmentFormats = &VulkanSwapchain::s_SwapchainImageFormat;
-		renderingInfo.depthAttachmentFormat = VulkanSwapchain::s_SwapchainDepthFormat;
-		renderingInfo.stencilAttachmentFormat = VK_FORMAT_UNDEFINED;
+		VkPipelineRenderingCreateInfo pipelineRenderingInfo{};
+		pipelineRenderingInfo.colorAttachmentCount = 1;
+		pipelineRenderingInfo.pColorAttachmentFormats = &VulkanSwapchain::s_SwapchainImageFormat;
+		pipelineRenderingInfo.depthAttachmentFormat = VulkanSwapchain::s_SwapchainDepthFormat;
+		pipelineRenderingInfo.stencilAttachmentFormat = VK_FORMAT_UNDEFINED;
+		pipelineRenderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
+		pipelineRenderingInfo.pNext = nullptr;
 
 		VkGraphicsPipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -287,7 +324,7 @@ namespace Sleet {
 		pipelineInfo.subpass = 0;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
 		pipelineInfo.basePipelineIndex = -1; // Optional
-		pipelineInfo.pNext = &renderingInfo;
+		pipelineInfo.pNext = &m_PipelineRenderingInfo;
 
 		if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_Pipeline) != VK_SUCCESS) 
 		{
